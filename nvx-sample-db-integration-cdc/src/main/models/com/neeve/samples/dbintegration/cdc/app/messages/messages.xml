@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<model xmlns="http://www.neeveresearch.com/schema/x-adml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" namespace="com.neeve.samples.dbintegration.cdc.app.messages">
+    <factories>
+        <factory name="MessageFactory" id="1"/>
+    </factories>
+
+    <messages>
+        <message name="InventoryUpdateRequest" factoryid="1" id="1">
+            <field name="sku" type="Long"/>
+            <field name="count" type="Integer"/>
+        </message>
+    </messages>
+</model>
+

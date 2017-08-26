@@ -1,0 +1,6 @@
+##DISPLAYNAME Shutdown XVM ...
+##DESCRIPTION Shuts down an XVM
+##VAR xvmName [displayName="XVM Name", type=String, validValues="processor,runner,driver", description="The name of the XVM to shutdown"] 
+
+assume launch-xvm has run
+shutdown the ${xvmName::processor} xvm

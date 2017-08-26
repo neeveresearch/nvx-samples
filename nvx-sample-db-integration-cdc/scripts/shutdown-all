@@ -1,0 +1,8 @@
+##DISPLAYNAME Shutdown All
+##DESCRIPTION Shuts down all XVMs in the system
+
+assume launch-all has run
+stop the driver app in the driver xvm
+stop the processor app in the processor xvm
+stop the runner app in the runner xvm
+shutdown

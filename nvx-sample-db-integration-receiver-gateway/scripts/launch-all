@@ -1,0 +1,7 @@
+##DISPLAYNAME Launch All
+##DESCRIPTION Launches all XVMs in the system
+
+assume provision has run
+launch the processor xvm
+launch the gateway xvm
+launch the driver xvm

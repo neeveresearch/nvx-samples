@@ -1,0 +1,72 @@
+<?xml version="1.0"?>
+<model xmlns="http://www.neeveresearch.com/schema/x-ddl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <buses>
+        <bus name="processor" descriptor="${processor.bus.descriptor::direct://processor}">
+            <channels>
+                <channel name="requests" id="1"/>
+            </channels>
+        </bus>
+    </buses>
+
+    <apps>
+        <app name="processor" mainClass="com.neeve.samples.dbintegration.sendergateway.app.App">
+            <messaging>
+                <factories>
+                    <factory name="com.neeve.samples.dbintegration.sendergateway.app.messages.MessageFactory"/>
+                </factories>
+                <bus name="processor">
+                    <channels>
+                        <channel name="requests" join="true"/>
+                    </channels>
+                </bus>
+            </messaging>
+        </app>
+
+        <app name="gateway" mainClass="com.neeve.samples.dbintegration.sendergateway.gateway.App">
+            <messaging>
+                <factories>
+                    <factory name="com.neeve.samples.dbintegration.sendergateway.app.messages.MessageFactory"/>
+                </factories>
+                <bus name="processor">
+                    <channels>
+                        <channel name="requests" join="false"/>
+                    </channels>
+                </bus>
+            </messaging>
+        </app>
+    </apps>
+
+    <servers>
+        <server name="processor">
+            <apps>
+                <app name="processor" autoStart="true"/>
+            </apps>           
+            <heartbeats enabled="true" interval="10">
+                <tracing enabled="true">
+                    <traceAdminClientStats>false</traceAdminClientStats>
+                    <traceAppStats>false</traceAppStats>
+                    <tracePoolStats>false</tracePoolStats>
+                    <traceSysStats>false</traceSysStats>
+                    <traceThreadStats>false</traceThreadStats>
+                    <traceUserStats>true</traceUserStats>
+                </tracing>
+            </heartbeats>
+        </server>
+
+        <server name="gateway">
+            <apps>
+                <app name="gateway" autoStart="true"/>
+            </apps>           
+            <heartbeats enabled="true" interval="10">
+                <tracing enabled="true">
+                    <traceAdminClientStats>false</traceAdminClientStats>
+                    <traceAppStats>false</traceAppStats>
+                    <tracePoolStats>false</tracePoolStats>
+                    <traceSysStats>false</traceSysStats>
+                    <traceThreadStats>false</traceThreadStats>
+                    <traceUserStats>true</traceUserStats>
+                </tracing>
+            </heartbeats>
+        </server>
+    </servers>
+</model>
