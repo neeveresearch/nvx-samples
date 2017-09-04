@@ -5,7 +5,6 @@ import com.neeve.aep.IAepApplicationStateFactory;
 import com.neeve.aep.AepEngine;
 import com.neeve.aep.annotations.EventHandler;
 import com.neeve.cli.annotations.Command;
-import com.neeve.server.app.annotations.AppInjectionPoint;
 import com.neeve.server.app.annotations.AppHAPolicy;
 import com.neeve.server.app.annotations.AppStat;
 import com.neeve.server.app.annotations.AppStateFactoryAccessor;
@@ -31,7 +30,7 @@ import com.neeve.samples.dbintegration.sendergateway.app.state.Inventory;
  * https://docs.neeveresearch.com/display/KB/Integrating+State+with+External+Sources 
  * </p> 
  */
-@AppHAPolicy(value=AepEngine.HAPolicy.StateReplication)
+@AppHAPolicy(value = AepEngine.HAPolicy.StateReplication)
 public class App {
     @AppStat
     final private Counter processedCount = StatsFactory.createCounterStat("Processed Count");
@@ -49,7 +48,7 @@ public class App {
     @EventHandler
     final public void onInventoryUpdateRequest(InventoryUpdateRequest request, Repository repository) {
         // trace
-        System.out.println("Received request " + request.toString()); 
+        System.out.println("Received request " + request.toString());
 
         // update the number of requests processed
         processedCount.increment();

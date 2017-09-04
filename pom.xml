@@ -3,13 +3,11 @@
     <groupId>com.neeve</groupId>
     <artifactId>nvx-samples-parent</artifactId>
     <packaging>pom</packaging>
-    <version>3.8-SNAPSHOT</version>
+    <version>3.7-SNAPSHOT</version>
     <name>X Platform Samples Parent</name>
 
     <properties>
-        <nvx.talon.version>3.8.22</nvx.talon.version>
-        <nvx.robin.version>2.5-M1</nvx.robin.version>
-        <nvx.eagle.version>2.4-M1</nvx.eagle.version>
+        <nvx.platform.version>3.7.2</nvx.platform.version>
     </properties>
 
     <modules>
@@ -17,19 +15,29 @@
         <module>nvx-sample-db-integration-sender-gateway</module>
         <module>nvx-sample-db-integration-cdc</module>
     </modules>
+    
+    <dependencyManagement>
+      <dependencies>  
+        <dependency>
+          <groupId>com.neeve</groupId>
+          <artifactId>nvx-platform-bom</artifactId>
+          <version>${nvx.platform.version}</version>
+          <type>pom</type>
+          <scope>import</scope>
+        </dependency>
+      </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
             <groupId>com.neeve</groupId>
-            <artifactId>nvx-talon</artifactId>
-            <version>${nvx.talon.version}</version>
+            <artifactId>nvx-talon-all</artifactId>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.neeve</groupId>
             <artifactId>nvx-eagle</artifactId>
-            <version>${nvx.eagle.version}</version>
         </dependency>
     </dependencies>
 
