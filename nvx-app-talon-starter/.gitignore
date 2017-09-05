@@ -1,0 +1,8 @@
+.classpath
+.project
+.settings/
+/target/
+/rdat/
+.idea
+*.iml
+/**/.~lock.*
