@@ -1,0 +1,124 @@
+<?xml version="1.0"?>
+<model xmlns="http://www.neeveresearch.com/schema/x-ddl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <env>
+        <!-- Configure to optimize for latency -->
+        <nv.optimizefor>latency</nv.optimizefor>
+
+        <!-- Configure the test drivers -->
+        <driver.sendRate>1000</driver.sendRate>
+        <driver.sendCount>10000</driver.sendCount>
+        <driver.sendChannel>requests</driver.sendChannel>
+        <driver.autoSend>false</driver.autoSend>
+    </env>
+
+    <buses>
+        <bus name="processor" descriptor="direct://processor">
+            <channels>
+                <channel name="requests" id="1">
+                    <qos>Guaranteed</qos>
+                </channel>
+            </channels>
+        </bus>
+        <bus name="events" descriptor="direct://receiver">
+            <channels>
+                <channel name="events" id="2">
+                    <qos>Guaranteed</qos>
+                </channel>
+            </channels>
+        </bus>
+    </buses>
+
+    <apps>
+        <app name="processor" mainClass="com.neeve.talon.starter.Application">
+            <messaging>
+                <factories>
+                    <factory name="com.neeve.talon.starter.messages.MessageFactory"/>
+                </factories>
+                <bus name="processor">
+                    <channels>
+                        <channel name="requests" join="true"/>
+                    </channels>
+                </bus>
+                <bus name="events">
+                    <channels>
+                        <channel name="events" join="false"/>
+                    </channels>
+                </bus>
+            </messaging>
+            <messagingStartFailPolicy>NeverFail</messagingStartFailPolicy>
+            <storage>
+                <factories>
+                    <factory name="com.neeve.talon.starter.state.StateFactory"/>
+                </factories>
+                <clustering enabled="${processor.clustering.enabled::true}"/>
+                <persistence enabled="true">
+                    <storeRoot>${processor.tlog.root::rdat}</storeRoot>
+                    <initialLogLength>0</initialLogLength>
+                    <compactionThreshold>0</compactionThreshold>
+                    <maxCompactionWindowSize>256</maxCompactionWindowSize>
+                </persistence>
+                <checkpointingType>Default</checkpointingType>
+                <checkpointThreshold>1</checkpointThreshold>
+                <icr role="${processor.icr.role::Sender}" busDescriptor="jms://localhost:7222" enabled="${processor.icr.enabled::false}"/>
+            </storage>
+        </app>
+
+        <app name="sender" mainClass="com.neeve.talon.starter.driver.SendDriver">
+            <messaging>
+                <factories>
+                    <factory name="com.neeve.talon.starter.messages.MessageFactory"/>
+                </factories>
+                <bus name="processor">
+                    <channels>
+                        <channel name="requests" join="false"/>
+                    </channels>
+                </bus>
+            </messaging>
+            <messagingStartFailPolicy>NeverFail</messagingStartFailPolicy>
+            <storage>
+                <persistence enabled="false"/>
+            </storage>
+            <sequenceUnsolicitedWithSolicitedSends>true</sequenceUnsolicitedWithSolicitedSends>
+        </app>
+
+        <app name="receiver" mainClass="com.neeve.talon.starter.driver.ReceiveDriver">
+            <messaging>
+                <factories>
+                    <factory name="com.neeve.talon.starter.messages.MessageFactory"/>
+                </factories>
+                <bus name="events">
+                    <channels>
+                        <channel name="events" join="true"/>
+                    </channels>
+                </bus>
+            </messaging>
+            <messagingStartFailPolicy>NeverFail</messagingStartFailPolicy>
+            <storage>
+                <persistence enabled="false"/>
+            </storage>
+        </app>
+    </apps>
+
+    <servers>
+        <server name="processor-1">
+            <apps>
+                <app name="processor" autoStart="true"/>
+            </apps>
+        </server>
+        <server name="processor-2">
+            <apps>
+                <app name="processor" autoStart="true"/>
+            </apps>
+        </server>
+        <server name="sender">
+            <apps>
+                <app name="sender" autoStart="true"/>
+            </apps>
+        </server>
+        <server name="receiver">
+            <apps>
+                <app name="receiver" autoStart="true"/>
+            </apps>
+        </server>
+    </servers>
+</model>

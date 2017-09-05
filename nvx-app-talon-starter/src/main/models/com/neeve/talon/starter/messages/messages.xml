@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<model xmlns="http://www.neeveresearch.com/schema/x-adml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" namespace="com.neeve.talon.starter.messages">
+    <factories>
+        <factory name="MessageFactory" id="1"/>
+    </factories>
+
+    <messages>
+        <message name="Message" factoryid="1" id="1">
+            <field name="count" type="Long" id="1"/>
+        </message>
+
+        <message name="Event" factoryid="1" id="2">
+            <field name="comment" type="String" id="1"/>
+            <field name="count" type="Long" id="2"/>
+        </message>
+    </messages>
+</model>
+
