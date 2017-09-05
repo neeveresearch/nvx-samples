@@ -11,6 +11,7 @@
     </properties>
 
     <modules>
+        <module>nvx-app-talon-starter</module>
         <module>nvx-sample-db-integration-receiver-gateway</module>
         <module>nvx-sample-db-integration-sender-gateway</module>
         <module>nvx-sample-db-integration-cdc</module>
@@ -50,9 +51,11 @@
                     <artifactId>versions-maven-plugin</artifactId>
                     <version>2.4</version>
                     <configuration>
-                      <allowSnapshots>false</allowSnapshots>
+                      <allowSnapshots>true</allowSnapshots>
                       <allowRangeMatching>true</allowRangeMatching>
                       <allowDowngrade>true</allowDowngrade>
+                      <allowIncrementalUpdates>true</allowIncrementalUpdates>
+                      <allowMajorUpdates>true</allowMajorUpdates>
                         <properties>
                             <property>
                                 <name>nvx.platform.version</name>
@@ -61,6 +64,7 @@
                                     <dependency>
                                         <groupId>com.neeve</groupId>
                                         <artifactId>nvx-platform-bom</artifactId>
+                                        <type>pom</type>
                                     </dependency>
                                 </dependencies>
                             </property>
