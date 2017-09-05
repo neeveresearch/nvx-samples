@@ -1,28 +1,26 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"> 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.neeve</groupId>
     <artifactId>nvx-app-talon-starter</artifactId>
     <packaging>jar</packaging>
-    <version>3.7-SNAPSHOT</version>
-    <name>nvx-app-talon-starter</name>
+    <name>Talon Start Application</name>
+    <description>This application is reference by the Talon Manual's Getting Started guide</description>
+    <url>https://docs.neeveresearch.com/display/TALONDOC/Get+Started</url>
 
-    <properties>
-        <nvx.talon.version>3.7.253</nvx.talon.version>
-        <nvx.robin.version>2.4.2</nvx.robin.version>
-        <nvx.jms.version>3.7.253</nvx.jms.version>
-    </properties>
+    <parent>
+      <groupId>com.neeve</groupId>
+      <artifactId>nvx-samples-parent</artifactId>
+      <version>3.7-SNAPSHOT</version>
+    </parent>
 
     <dependencies>
         <dependency>
             <groupId>com.neeve</groupId>
             <artifactId>nvx-talon-all</artifactId>
-            <version>${nvx.talon.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.neeve</groupId>
             <artifactId>nvx-jms</artifactId>
-            <version>${nvx.jms.version}</version>
         </dependency>
 
         <dependency>
@@ -36,14 +34,14 @@
         <plugins>
             <plugin>
                 <groupId>com.neeve</groupId>
-                <artifactId>nvx-adm-maven-plugin</artifactId>
-                <version>${nvx.talon.version}</version>
+                <artifactId>nvx-platform-maven-plugin</artifactId>
+                <version>${nvx.platform.version}</version>
                 <executions>
                     <execution>
                         <id>State</id>
                         <phase>generate-sources</phase>
                         <goals>
-                            <goal>generate</goal>
+                            <goal>adm-generate</goal>
                         </goals>
                         <configuration>
                             <modelFile>${project.basedir}/src/main/models/com/neeve/talon/starter/state/state.xml</modelFile>
@@ -55,12 +53,20 @@
                         <id>Messages</id>
                         <phase>generate-sources</phase>
                         <goals>
-                            <goal>generate</goal>
+                            <goal>adm-generate</goal>
                         </goals>
                         <configuration>
                             <modelFile>${project.basedir}/src/main/models/com/neeve/talon/starter/messages/messages.xml</modelFile>
                             <encodingType>Protobuf</encodingType>
                         </configuration>
+                    </execution>
+                    
+                    <execution>
+                        <id>Xar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>robin-xar</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
@@ -79,21 +85,6 @@
                 </executions>
             </plugin>
 
-            <plugin>
-                <groupId>com.neeve</groupId>
-                <artifactId>nvx-robin-maven-plugin</artifactId>
-                <version>${nvx.robin.version}</version>
-                <executions>
-                    <execution>
-                        <id>Xar</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>xar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            
             <plugin>
               <artifactId>maven-compiler-plugin</artifactId>
               <configuration>

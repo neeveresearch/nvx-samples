@@ -54,6 +54,8 @@
                       <allowSnapshots>true</allowSnapshots>
                       <allowRangeMatching>true</allowRangeMatching>
                       <allowDowngrade>true</allowDowngrade>
+                      <allowIncrementalUpdates>true</allowIncrementalUpdates>
+                      <allowMajorUpdates>true</allowMajorUpdates>
                         <properties>
                             <property>
                                 <name>nvx.platform.version</name>
@@ -62,30 +64,7 @@
                                     <dependency>
                                         <groupId>com.neeve</groupId>
                                         <artifactId>nvx-platform-bom</artifactId>
-                                    </dependency>
-                                </dependencies>
-                            </property>
-                        </properties>
-                        <properties>
-                            <property>
-                                <name>nvx.platform.version</name>
-                                <version>[${nvx.talon.version}]</version>
-                                <dependencies>
-                                    <dependency>
-                                        <groupId>com.neeve</groupId>
-                                        <artifactId>nvx-talon-all</artifactId>
-                                    </dependency>
-                                </dependencies>
-                            </property>
-                        </properties>
-                        <properties>
-                            <property>
-                                <name>nvx.platform.version</name>
-                                <version>[${nvx.robin.version}]</version>
-                                <dependencies>
-                                    <dependency>
-                                        <groupId>com.neeve</groupId>
-                                        <artifactId>nvx-robin</artifactId>
+                                        <type>pom</type>
                                     </dependency>
                                 </dependencies>
                             </property>
