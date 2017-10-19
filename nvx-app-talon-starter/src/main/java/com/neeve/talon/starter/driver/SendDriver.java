@@ -2,6 +2,10 @@ package com.neeve.talon.starter.driver;
 
 import com.neeve.talon.starter.messages.IMessage;
 import com.neeve.talon.starter.messages.Message;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 import com.neeve.aep.AepEngine.HAPolicy;
 import com.neeve.aep.AepMessageSender;
 import com.neeve.cli.annotations.Command;
@@ -40,10 +44,11 @@ public class SendDriver {
 
     @Command(name = "send")
     public final void doSend(int count, int rate) throws Exception {
+        BufferedReader inputReader = new BufferedReader(new InputStreamReader(System.in));
         while (true) {
             if (!autoSend) {
                 System.out.println("Press Enter to send " + sendCount + " messages...");
-                System.in.read();
+                inputReader.readLine();
             }
             UtlGovernor.run(sendCount, sendRate, new Runnable() {
                 @Override
