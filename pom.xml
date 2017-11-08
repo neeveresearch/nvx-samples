@@ -3,11 +3,11 @@
     <groupId>com.neeve</groupId>
     <artifactId>nvx-samples-parent</artifactId>
     <packaging>pom</packaging>
-    <version>3.8-M3</version>
+    <version>3.8-M4</version>
     <name>X Platform Samples Parent</name>
 
     <properties>
-        <nvx.platform.version>3.8-M3</nvx.platform.version>
+        <nvx.platform.version>3.8-M4</nvx.platform.version>
     </properties>
 
     <modules>
@@ -54,21 +54,23 @@
                       <allowSnapshots>true</allowSnapshots>
                       <allowRangeMatching>true</allowRangeMatching>
                       <allowDowngrade>true</allowDowngrade>
-                      <allowIncrementalUpdates>true</allowIncrementalUpdates>
                       <allowMajorUpdates>true</allowMajorUpdates>
-                        <properties>
-                            <property>
-                                <name>nvx.platform.version</name>
-                                <version>[${nvx.platform.version}]</version>
-                                <dependencies>
-                                    <dependency>
-                                        <groupId>com.neeve</groupId>
-                                        <artifactId>nvx-platform-bom</artifactId>
-                                        <type>pom</type>
-                                    </dependency>
-                                </dependencies>
-                            </property>
-                        </properties>
+                      <allowMinorUpdates>true</allowMinorUpdates>
+                      <allowIncrementalUpdates>true</allowIncrementalUpdates>
+                      <forceVersion>true</forceVersion>
+                      <properties>
+                          <property>
+                              <name>nvx.platform.version</name>
+                              <version>[${nvx.platform.version}]</version>
+                              <dependencies>
+                                  <dependency>
+                                      <groupId>com.neeve</groupId>
+                                      <artifactId>nvx-platform-bom</artifactId>
+                                      <type>pom</type>
+                                  </dependency>
+                              </dependencies>
+                          </property>
+                      </properties>
                     </configuration>
                 </plugin>
             </plugins>
