@@ -99,26 +99,41 @@
         </app>
     </apps>
 
-    <servers>
-        <server name="processor-1">
+    <xvms>
+        <templates>
+          <xvm name="xvm-template">          
+            <heartbeats enabled="true" interval="10">
+                <tracing enabled="true">
+                    <traceAdminClientStats>false</traceAdminClientStats>
+                    <traceAppStats>false</traceAppStats>
+                    <tracePoolStats>false</tracePoolStats>
+                    <traceSysStats>false</traceSysStats>
+                    <traceThreadStats>false</traceThreadStats>
+                    <traceUserStats>true</traceUserStats>
+                </tracing>
+            </heartbeats>
+          </xvm>
+        </templates>
+        
+        <xvm name="processor-1" template="xvm-template">
             <apps>
                 <app name="processor" autoStart="true"/>
             </apps>
-        </server>
-        <server name="processor-2">
+        </xvm>
+        <xvm name="processor-2" template="xvm-template">
             <apps>
                 <app name="processor" autoStart="true"/>
             </apps>
-        </server>
-        <server name="sender">
+        </xvm>
+        <xvm name="sender" template="xvm-template">
             <apps>
                 <app name="sender" autoStart="true"/>
             </apps>
-        </server>
-        <server name="receiver">
+        </xvm>
+        <xvm name="receiver">
             <apps>
                 <app name="receiver" autoStart="true"/>
             </apps>
-        </server>
-    </servers>
+        </xvm>
+    </xvms>
 </model>

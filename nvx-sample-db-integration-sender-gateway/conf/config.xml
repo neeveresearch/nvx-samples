@@ -36,11 +36,9 @@
         </app>
     </apps>
 
-    <servers>
-        <server name="processor">
-            <apps>
-                <app name="processor" autoStart="true"/>
-            </apps>           
+    <xvms>
+        <templates>
+          <xvm name="xvm-template">          
             <heartbeats enabled="true" interval="10">
                 <tracing enabled="true">
                     <traceAdminClientStats>false</traceAdminClientStats>
@@ -51,22 +49,18 @@
                     <traceUserStats>true</traceUserStats>
                 </tracing>
             </heartbeats>
-        </server>
+          </xvm>
+        </templates>
+        <xvm name="processor" template="xvm-template">
+            <apps>
+                <app name="processor" autoStart="true"/>
+            </apps> 
+        </xvm>
 
-        <server name="gateway">
+        <xvm name="gateway" template="xvm-template">
             <apps>
                 <app name="gateway" autoStart="true"/>
             </apps>           
-            <heartbeats enabled="true" interval="10">
-                <tracing enabled="true">
-                    <traceAdminClientStats>false</traceAdminClientStats>
-                    <traceAppStats>false</traceAppStats>
-                    <tracePoolStats>false</tracePoolStats>
-                    <traceSysStats>false</traceSysStats>
-                    <traceThreadStats>false</traceThreadStats>
-                    <traceUserStats>true</traceUserStats>
-                </tracing>
-            </heartbeats>
-        </server>
-    </servers>
+        </xvm>
+    </xvms>
 </model>
