@@ -4,12 +4,12 @@
   <groupId>com.neeve</groupId>
   <artifactId>nvx-samples-parent</artifactId>
   <packaging>pom</packaging>
-  <version>3.8-SNAPSHOT</version>
+  <version>3.8-M8</version>
   <name>X Platform Samples Parent</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <nvx.platform.version>3.8-M7</nvx.platform.version>
+    <nvx.platform.version>3.8-M8</nvx.platform.version>
   </properties>
 
   <modules>
