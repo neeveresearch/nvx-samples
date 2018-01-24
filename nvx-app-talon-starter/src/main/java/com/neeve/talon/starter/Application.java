@@ -6,6 +6,7 @@ import com.neeve.aep.AepEngine;
 import com.neeve.aep.AepMessageSender;
 import com.neeve.aep.annotations.EventHandler;
 import com.neeve.server.app.annotations.AppInjectionPoint;
+import com.neeve.server.app.annotations.AppStat;
 import com.neeve.server.app.annotations.AppHAPolicy;
 import com.neeve.server.app.annotations.AppStateFactoryAccessor;
 
@@ -13,9 +14,12 @@ import com.neeve.talon.starter.messages.Message;
 import com.neeve.talon.starter.messages.Event;
 import com.neeve.talon.starter.state.Repository;
 
-@AppHAPolicy(value=AepEngine.HAPolicy.StateReplication)
+@AppHAPolicy(value = AepEngine.HAPolicy.StateReplication)
 public class Application {
     private AepMessageSender _messageSender;
+
+    @AppStat(name = "Processed")
+    private volatile long numProcessed;
 
     @AppStateFactoryAccessor
     final public IAepApplicationStateFactory getStateFactory() {
@@ -36,6 +40,7 @@ public class Application {
     final public void onMessage(Message message, Repository repository) {
         // update state
         repository.setCounter(repository.getCounter() + 1);
+        numProcessed = repository.getCounter();
 
         // trace
         if (repository.getCounter() % 1000 == 0) {
@@ -49,4 +54,3 @@ public class Application {
         _messageSender.sendMessage("events", event);
     }
 }
-

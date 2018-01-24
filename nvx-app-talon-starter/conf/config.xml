@@ -1,139 +1,208 @@
 <?xml version="1.0"?>
 <model xmlns="http://www.neeveresearch.com/schema/x-ddl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <env>
-        <!-- Configure to optimize for latency -->
-        <nv.optimizefor>latency</nv.optimizefor>
+  <systemDetails>
+    <displayName>Talon Starter App</displayName>
+    <name>nvx-app-talon-starter</name>
+  </systemDetails>
+  
+  <env>
+    <nv>
+      <!-- optimize for throughput -->
+      <optimizefor>latency</optimizefor>
 
-        <!-- Configure the test drivers -->
-        <driver.sendRate>1000</driver.sendRate>
-        <driver.sendCount>10000</driver.sendCount>
-        <driver.sendChannel>requests</driver.sendChannel>
+      <!-- trace -->
+      <aep.trace>info</aep.trace>
+
+      <!-- global latency stats settings -->
+      <time.useepochoffset>false</time.useepochoffset>
+      <msg.latency.stats>true</msg.latency.stats>
+      <ods.latency.stats>true</ods.latency.stats>
+      <link.network.stampiots>true</link.network.stampiots>
+      <latencymanager.samplesize>10240</latencymanager.samplesize>
+    </nv>
+
+    <!-- Configure the test drivers -->
+    <driver.sendRate>1000</driver.sendRate>
+    <driver.sendCount>10000</driver.sendCount>
+    <driver.sendChannel>requests</driver.sendChannel>
+    <driver.autoSend>false</driver.autoSend>
+  </env>
+
+  <buses>
+    <bus name="processor" descriptor="direct://processor">
+      <channels>
+        <channel name="requests" id="1">
+          <qos>Guaranteed</qos>
+        </channel>
+      </channels>
+    </bus>
+    <bus name="events" descriptor="direct://receiver">
+      <channels>
+        <channel name="events" id="2">
+          <qos>Guaranteed</qos>
+        </channel>
+      </channels>
+    </bus>
+  </buses>
+
+  <apps>
+    <templates>
+      <app name="app-template">
+        <captureEventLatencyStats>true</captureEventLatencyStats>
+        <captureTransactionLatencyStats>true</captureTransactionLatencyStats>
+        <captureMessageTypeStats>true</captureMessageTypeStats>
+        <capturePerTransactionStats>false</capturePerTransactionStats>
+        <perTransactionStatsLogging policy="Off">
+          <detachedWrite enabled="true"></detachedWrite>
+        </perTransactionStatsLogging>
+      </app>
+    </templates>
+  
+    <app name="processor" mainClass="com.neeve.talon.starter.Application" template="app-template">
+      <messaging>
+        <factories>
+          <factory name="com.neeve.talon.starter.messages.MessageFactory" />
+        </factories>
+        <bus name="processor">
+          <channels>
+            <channel name="requests" join="true" />
+          </channels>
+        </bus>
+        <bus name="events">
+          <channels>
+            <channel name="events" join="false" />
+          </channels>
+        </bus>
+      </messaging>
+      <messagingStartFailPolicy>NeverFail</messagingStartFailPolicy>
+      <storage>
+        <factories>
+          <factory name="com.neeve.talon.starter.state.StateFactory" />
+        </factories>
+        <clustering enabled="${processor.clustering.enabled::true}" />
+        <persistence enabled="true">
+          <storeRoot>${processor.tlog.root::rdat}</storeRoot>
+          <initialLogLength>0</initialLogLength>
+          <compactionThreshold>0</compactionThreshold>
+          <maxCompactionWindowSize>256</maxCompactionWindowSize>
+        </persistence>
+        <checkpointingType>Default</checkpointingType>
+        <checkpointThreshold>1</checkpointThreshold>
+        <icr role="${processor.icr.role::Sender}" busDescriptor="jms://localhost:7222" enabled="${processor.icr.enabled::false}" />
+      </storage>
+    </app>
+
+    <app name="sender" mainClass="com.neeve.talon.starter.driver.SendDriver" template="app-template">
+      <messaging>
+        <factories>
+          <factory name="com.neeve.talon.starter.messages.MessageFactory" />
+        </factories>
+        <bus name="processor">
+          <channels>
+            <channel name="requests" join="false" />
+          </channels>
+        </bus>
+      </messaging>
+      <messagingStartFailPolicy>NeverFail</messagingStartFailPolicy>
+      <storage>
+        <persistence enabled="false" />
+      </storage>
+      <sequenceUnsolicitedWithSolicitedSends>true</sequenceUnsolicitedWithSolicitedSends>
+    </app>
+
+    <app name="receiver" mainClass="com.neeve.talon.starter.driver.ReceiveDriver" template="app-template">
+      <messaging>
+        <factories>
+          <factory name="com.neeve.talon.starter.messages.MessageFactory" />
+        </factories>
+        <bus name="events">
+          <channels>
+            <channel name="events" join="true" />
+          </channels>
+        </bus>
+      </messaging>
+      <messagingStartFailPolicy>NeverFail</messagingStartFailPolicy>
+      <storage>
+        <persistence enabled="false" />
+      </storage>
+    </app>
+  </apps>
+
+  <xvms>
+    <templates>
+      <xvm name="xvm-template">
+        <heartbeats enabled="true" interval="10">
+          <tracing enabled="true">
+            <traceAdminClientStats>false</traceAdminClientStats>
+            <traceAppStats>false</traceAppStats>
+            <tracePoolStats>false</tracePoolStats>
+            <traceSysStats>false</traceSysStats>
+            <traceThreadStats>false</traceThreadStats>
+            <traceUserStats>true</traceUserStats>
+          </tracing>
+          <logging enabled="false">
+            <detachedWrite enabled="false"/>
+          </logging>
+          <collectIndividualThreadStats>true</collectIndividualThreadStats>
+          <collectSeriesStats>true</collectSeriesStats>
+          <includeMessageTypeStats>true</includeMessageTypeStats>
+        </heartbeats>
+      </xvm>
+    </templates>
+
+    <xvm name="processor-1" template="xvm-template">
+      <apps>
+        <app name="processor" autoStart="true" />
+      </apps>
+    </xvm>
+    <xvm name="processor-2" template="xvm-template">
+      <apps>
+        <app name="processor" autoStart="true" />
+      </apps>
+    </xvm>
+    <xvm name="sender" template="xvm-template">
+      <apps>
+        <app name="sender" autoStart="true" />
+      </apps>
+    </xvm>
+    <xvm name="receiver" template="xvm-template">
+      <apps>
+        <app name="receiver" autoStart="true" />
+      </apps>
+    </xvm>
+  </xvms>
+
+  <profiles>
+    <profile name="test">
+      <env>
+        <nv>
+          <conservecpu>true</conservecpu>
+          <discovery.descriptor>loopback://discovery&amp;initWaitTime=0</discovery.descriptor>
+        </nv>
+        <driver.autoSend>true</driver.autoSend>
+      </env>
+    </profile>
+
+    <profile name="desktop">
+      <env>
+        <nv>
+          <data.directory>rdat/${nv.ddl.targetxvm::.}</data.directory>
+          <conservecpu>true</conservecpu>
+        </nv>
         <driver.autoSend>false</driver.autoSend>
-    </env>
+      </env>
 
-    <buses>
-        <bus name="processor" descriptor="direct://processor">
-            <channels>
-                <channel name="requests" id="1">
-                    <qos>Guaranteed</qos>
-                </channel>
-            </channels>
-        </bus>
-        <bus name="events" descriptor="direct://receiver">
-            <channels>
-                <channel name="events" id="2">
-                    <qos>Guaranteed</qos>
-                </channel>
-            </channels>
-        </bus>
-    </buses>
-
-    <apps>
-        <app name="processor" mainClass="com.neeve.talon.starter.Application">
-            <messaging>
-                <factories>
-                    <factory name="com.neeve.talon.starter.messages.MessageFactory"/>
-                </factories>
-                <bus name="processor">
-                    <channels>
-                        <channel name="requests" join="true"/>
-                    </channels>
-                </bus>
-                <bus name="events">
-                    <channels>
-                        <channel name="events" join="false"/>
-                    </channels>
-                </bus>
-            </messaging>
-            <messagingStartFailPolicy>NeverFail</messagingStartFailPolicy>
-            <storage>
-                <factories>
-                    <factory name="com.neeve.talon.starter.state.StateFactory"/>
-                </factories>
-                <clustering enabled="${processor.clustering.enabled::true}"/>
-                <persistence enabled="true">
-                    <storeRoot>${processor.tlog.root::rdat}</storeRoot>
-                    <initialLogLength>0</initialLogLength>
-                    <compactionThreshold>0</compactionThreshold>
-                    <maxCompactionWindowSize>256</maxCompactionWindowSize>
-                </persistence>
-                <checkpointingType>Default</checkpointingType>
-                <checkpointThreshold>1</checkpointThreshold>
-                <icr role="${processor.icr.role::Sender}" busDescriptor="jms://localhost:7222" enabled="${processor.icr.enabled::false}"/>
-            </storage>
-        </app>
-
-        <app name="sender" mainClass="com.neeve.talon.starter.driver.SendDriver">
-            <messaging>
-                <factories>
-                    <factory name="com.neeve.talon.starter.messages.MessageFactory"/>
-                </factories>
-                <bus name="processor">
-                    <channels>
-                        <channel name="requests" join="false"/>
-                    </channels>
-                </bus>
-            </messaging>
-            <messagingStartFailPolicy>NeverFail</messagingStartFailPolicy>
-            <storage>
-                <persistence enabled="false"/>
-            </storage>
-            <sequenceUnsolicitedWithSolicitedSends>true</sequenceUnsolicitedWithSolicitedSends>
-        </app>
-
-        <app name="receiver" mainClass="com.neeve.talon.starter.driver.ReceiveDriver">
-            <messaging>
-                <factories>
-                    <factory name="com.neeve.talon.starter.messages.MessageFactory"/>
-                </factories>
-                <bus name="events">
-                    <channels>
-                        <channel name="events" join="true"/>
-                    </channels>
-                </bus>
-            </messaging>
-            <messagingStartFailPolicy>NeverFail</messagingStartFailPolicy>
-            <storage>
-                <persistence enabled="false"/>
-            </storage>
-        </app>
-    </apps>
-
-    <xvms>
+      <xvms>
         <templates>
-          <xvm name="xvm-template">          
-            <heartbeats enabled="true" interval="10">
-                <tracing enabled="true">
-                    <traceAdminClientStats>false</traceAdminClientStats>
-                    <traceAppStats>false</traceAppStats>
-                    <tracePoolStats>false</tracePoolStats>
-                    <traceSysStats>false</traceSysStats>
-                    <traceThreadStats>false</traceThreadStats>
-                    <traceUserStats>true</traceUserStats>
-                </tracing>
+          <xvm name="xvm-template">
+            <heartbeats enabled="true" interval="5">
+              <tracing enabled="true">
+                <traceUserStats>true</traceUserStats>
+              </tracing>
             </heartbeats>
           </xvm>
         </templates>
-        
-        <xvm name="processor-1" template="xvm-template">
-            <apps>
-                <app name="processor" autoStart="true"/>
-            </apps>
-        </xvm>
-        <xvm name="processor-2" template="xvm-template">
-            <apps>
-                <app name="processor" autoStart="true"/>
-            </apps>
-        </xvm>
-        <xvm name="sender" template="xvm-template">
-            <apps>
-                <app name="sender" autoStart="true"/>
-            </apps>
-        </xvm>
-        <xvm name="receiver">
-            <apps>
-                <app name="receiver" autoStart="true"/>
-            </apps>
-        </xvm>
-    </xvms>
+      </xvms>
+    </profile>
+  </profiles>
 </model>

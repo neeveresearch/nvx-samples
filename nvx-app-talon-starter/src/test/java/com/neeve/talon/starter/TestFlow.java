@@ -5,64 +5,51 @@
  */
 package com.neeve.talon.starter;
 
-import com.neeve.server.embedded.EmbeddedXVM;
-import com.neeve.talon.starter.driver.ReceiveDriver;
-import com.neeve.talon.starter.driver.SendDriver;
-import com.neeve.util.UtlFile;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
-import java.io.File;
-import java.net.URL;
 import java.util.Properties;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
 
-final public class TestFlow {
+import com.neeve.talon.starter.driver.ReceiveDriver;
+import com.neeve.talon.starter.driver.SendDriver;
+
+final public class TestFlow extends AbstractTest {
     @Test
     public void testFlow() throws Throwable {
-        URL config = new File(System.getProperty("basedir"), "conf/config.xml").toURI().toURL();
-        File testBedRoot = new File(System.getProperty("basedir"), "target/testbed/TestFlow");
-        UtlFile.deleteDirectory(testBedRoot);
-
+        int sendCount = 10000;
+        int sendRate = 10000;
+        // configure
         Properties env = new Properties();
-        env.put("NVROOT", testBedRoot.getCanonicalPath().toString());
+        env.put("nv.ddl.profiles", "test");
         env.put("nv.optimizefor", "throughput");
-        env.put("nv.conservecpu", "true");
-        env.put("nv.server.stats.enable", "false");
-        env.put("nv.server.stats.interval", "5000");
-        env.put("nv.server.stats.userstats.trace", "debug");
-        env.put("driver.sendRate", "10000");
-        env.put("driver.autoSend", "true");
-        env.put("processor.tlog.root", new File(testBedRoot, "rdat").getCanonicalPath().toString());
-
-        // use local discovery rather than multicast for portability
-        env.put("nv.discovery.descriptor", "local://test&initWaitTime=0");
-
-        // disable clustering for faster startup
-        env.put("processor.clustering.enabled", "false");
+        env.put("processor.tlog.root", getTestbedRoot() + "/rdat/processor-1");
+        // disable clustering to speed up app startup
+        env.put("x.apps.processor.storage.clustering.enabled", "false");
+        env.put("x.apps.doc-merger-2.storage.clustering.enabled", "false");
+        env.put("driver.sendCount", String.valueOf(sendCount));
+        env.put("driver.sendRate", String.valueOf(sendRate));
 
         //Start the receiver
-        EmbeddedXVM receiverXVM = EmbeddedXVM.create(config, "receiver", env);
-        receiverXVM.start();
-        ReceiveDriver receiver = (ReceiveDriver)receiverXVM.getApplication("receiver");
+        ReceiveDriver receiver = startApp(ReceiveDriver.class, "receiver", "receiver", env);
 
         Thread.sleep(1000);
 
         //Start the processor
-        EmbeddedXVM processor1XVM = EmbeddedXVM.create(config, "processor-1", env);
-        processor1XVM.start();
+        startApp(Application.class, "processor", "processor-1", env);
 
         Thread.sleep(1000);
 
         //Start the sender
-        EmbeddedXVM senderXVM = EmbeddedXVM.create(config, "sender", env);
-        senderXVM.start();
-        SendDriver sender = (SendDriver)senderXVM.getApplication("sender");
+        SendDriver sender = startApp(SendDriver.class, "sender", "sender", env);
 
         long timeout = System.currentTimeMillis() + 60000;
-        while (receiver.getCount() < 10000 && System.currentTimeMillis() < timeout) {
+        while (receiver.getCount() < sendCount && System.currentTimeMillis() < timeout) {
             Thread.sleep(500);
         }
+
+        //Sleep to catch any duplicates
+        Thread.sleep(1000);
 
         assertEquals("Receiver did not receive all Events", sender.getCount(), receiver.getCount());
     }

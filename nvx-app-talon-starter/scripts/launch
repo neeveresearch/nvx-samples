@@ -1,5 +1,0 @@
-assume deploy has run
-
-// launch the processor cluster 
-launch the processor1 xvm
-launch the processor2 xvm

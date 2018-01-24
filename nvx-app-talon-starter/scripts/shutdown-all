@@ -1,0 +1,8 @@
+##DISPLAYNAME Shut down all XVMs
+##DESCRIPTION Shuts down all of the XVMS (assuming they are all running)
+
+assume launch-all has run
+
+// shutdown the xvms
+shutdown
+
