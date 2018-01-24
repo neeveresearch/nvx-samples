@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>nvx-app-talon-starter</artifactId>
     <packaging>jar</packaging>
-    <name>Talon Start Application</name>
+    <name>Talon Starter Application</name>
     <description>This application is reference by the Talon Manual's Getting Started guide</description>
     <url>https://docs.neeveresearch.com/display/TALONDOC/Get+Started</url>
 
