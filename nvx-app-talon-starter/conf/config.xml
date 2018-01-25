@@ -3,6 +3,7 @@
   <systemDetails>
     <displayName>Talon Starter App</displayName>
     <name>nvx-app-talon-starter</name>
+    <version>DEV</version>
   </systemDetails>
   
   <env>
@@ -26,17 +27,25 @@
     <driver.sendCount>10000</driver.sendCount>
     <driver.sendChannel>requests</driver.sendChannel>
     <driver.autoSend>false</driver.autoSend>
+
+    <ACTIVEMQ_HOST>localhost</ACTIVEMQ_HOST>
+    <ACTIVEMQ_PORT>61616</ACTIVEMQ_PORT>
+    
   </env>
 
   <buses>
-    <bus name="processor" descriptor="direct://processor">
+    <bus name="processor">
+      <provider>direct</provider>
+      <address>processor</address>
       <channels>
         <channel name="requests" id="1">
           <qos>Guaranteed</qos>
         </channel>
       </channels>
     </bus>
-    <bus name="events" descriptor="direct://receiver">
+    <bus name="events">
+      <provider>direct</provider>
+      <address>receiver</address>
       <channels>
         <channel name="events" id="2">
           <qos>Guaranteed</qos>
@@ -79,7 +88,9 @@
         <factories>
           <factory name="com.neeve.talon.starter.state.StateFactory" />
         </factories>
-        <clustering enabled="${processor.clustering.enabled::true}" />
+        <clustering enabled="${processor.clustering.enabled::true}">
+          <localIfAddr>${PROCESSOR_REPLICATION_INTERFACE::0.0.0.0}</localIfAddr>
+        </clustering>
         <persistence enabled="true">
           <storeRoot>${processor.tlog.root::rdat}</storeRoot>
           <initialLogLength>0</initialLogLength>
@@ -137,7 +148,7 @@
             <traceAppStats>false</traceAppStats>
             <tracePoolStats>false</tracePoolStats>
             <traceSysStats>false</traceSysStats>
-            <traceThreadStats>false</traceThreadStats>
+            <traceThreadStats>true</traceThreadStats>
             <traceUserStats>true</traceUserStats>
           </tracing>
           <logging enabled="false">
@@ -173,6 +184,7 @@
   </xvms>
 
   <profiles>
+    <!-- Profile used for running unit tests -->
     <profile name="test">
       <env>
         <nv>
@@ -183,6 +195,7 @@
       </env>
     </profile>
 
+    <!-- Profile for running on single desktop host like a laptop -->
     <profile name="desktop">
       <env>
         <nv>
@@ -203,6 +216,158 @@
           </xvm>
         </templates>
       </xvms>
+    </profile>
+    
+    <!-- Profile for running on multiple hosts in real hardware -->
+    <profile name="dev-env">
+      <activation>
+        <properties>
+          <lumino.agent.env>neeve-lab</lumino.agent.env>
+        </properties>
+      </activation>
+
+      <env>
+        <nv>
+          <enablecpuaffinitymasks>true</enablecpuaffinitymasks>
+        </nv>
+
+        <ACTIVEMQ_HOST>192.168.1.8</ACTIVEMQ_HOST>
+        <ACTIVEMQ_PORT>61616</ACTIVEMQ_PORT>
+
+        <SOLACE_HOST>192.168.1.9</SOLACE_HOST>
+        <SOLACE_PORT>55555</SOLACE_PORT>
+
+        <SENDER_ACCEPTOR>tcp://192.168.1.12:11000</SENDER_ACCEPTOR>
+        <RECEIVER_ACCEPTOR>tcp://192.168.1.12:12000</RECEIVER_ACCEPTOR>
+        <PROCESSOR1_ACCEPTOR>tcp://192.168.1.13:11000</PROCESSOR1_ACCEPTOR>
+        <PROCESSOR2_ACCEPTOR>tcp://192.168.1.14:11000</PROCESSOR2_ACCEPTOR>
+
+        <simulator.ems.orderPreallocateCount>1000000</simulator.ems.orderPreallocateCount>
+
+      </env>
+
+      <xvms>
+        <xvm name="processor-1">
+          <provisioning>
+            <host>192.168.1.13</host>
+            <jvm>
+              <javaHome>/usr/java/jdk1.8.0_60</javaHome>
+              <jvmParams>
+                -Xms8g
+                -Xmx8g
+                -XX:NewSize=1536m
+                -XX:MaxNewSize=1536m
+                -XX:SurvivorRatio=6
+                -XX:+UseParNewGC
+                -XX:ParallelGCThreads=1
+                -XX:MaxTenuringThreshold=2
+                -Xnoclassgc
+              </jvmParams>
+            </jvm>
+          </provisioning>
+
+          <env>
+            <nv.discovery.descriptor>mcast://224.0.1.200:4090&amp;localIfAddr=64.71.157.13</nv.discovery.descriptor>
+            <PROCESSOR_REPLICATION_INTERFACE>192.168.2.13</PROCESSOR_REPLICATION_INTERFACE>
+          </env>
+        </xvm>
+
+        <xvm name="processor-2">
+          <provisioning>
+            <host>192.168.1.14</host>
+            <jvm>
+              <javaHome>/usr/java/jdk1.8.0_60</javaHome>
+              <jvmParams>
+                -Xms8g
+                -Xmx8g
+                -XX:NewSize=1536m
+                -XX:MaxNewSize=1536m
+                -XX:SurvivorRatio=6
+                -XX:+UseParNewGC
+                -XX:ParallelGCThreads=1
+                -XX:MaxTenuringThreshold=2
+                -Xnoclassgc
+              </jvmParams>
+            </jvm>
+          </provisioning>
+
+          <env>
+            <nv.discovery.descriptor>mcast://224.0.1.200:4090&amp;localIfAddr=64.71.157.14</nv.discovery.descriptor>
+            <PROCESSOR_REPLICATION_INTERFACE>192.168.2.14</PROCESSOR_REPLICATION_INTERFACE>
+          </env>
+        </xvm>
+
+        <xvm name="receiver">
+          <provisioning>
+            <host>192.168.1.12</host>
+            <jvm>
+              <javaHome>/usr/java/jdk1.8.0_60</javaHome>
+              <jvmParams>
+                -Xms2g
+                -Xmx2g
+                -XX:NewSize=1024m
+                -XX:MaxNewSize=1024m
+                -XX:SurvivorRatio=32
+                -XX:+UseParNewGC
+                -XX:ParallelGCThreads=3
+                -Xnoclassgc
+              </jvmParams>
+            </jvm>
+          </provisioning>
+          <env>
+            <nv.discovery.descriptor>mcast://224.0.1.200:4090&amp;localIfAddr=64.71.157.12</nv.discovery.descriptor>
+          </env>
+        </xvm>
+
+        <xvm name="sender">
+          <provisioning>
+            <host>192.168.1.12</host>
+            <jvm>
+              <jvmParams>
+                -Xms2g
+                -Xmx2g
+                -XX:NewSize=1024m
+                -XX:MaxNewSize=1024m
+                -XX:SurvivorRatio=32
+                -XX:+UseParNewGC
+                -XX:ParallelGCThreads=3
+                -Xnoclassgc
+              </jvmParams>
+            </jvm>
+          </provisioning>
+
+          <env>
+            <nv.discovery.descriptor>mcast://224.0.1.200:4090&amp;localIfAddr=64.71.157.12</nv.discovery.descriptor>
+          </env>
+        </xvm>
+      </xvms>
+    </profile>
+    
+
+    <profile name="activemq">
+      <activation>
+        <properties>
+          <tick-to-trade-bus-provider>activemq</tick-to-trade-bus-provider>
+        </properties>
+      </activation>
+      <buses>
+        <bus name="ems">
+          <provider>activemq</provider>
+          <address>${ACTIVEMQ_HOST}</address>
+          <port>${ACTIVEMQ_PORT}</port>
+          <properties>
+            <topic_starts_with_channel>false</topic_starts_with_channel>
+          </properties>
+        </bus>
+        <bus name="market">
+          <provider>activemq</provider>
+          <address>${ACTIVEMQ_HOST}</address>
+          <port>${ACTIVEMQ_PORT}</port>
+          <properties>
+            <topic_starts_with_channel>false</topic_starts_with_channel>
+          </properties>
+        </bus>
+      </buses>
     </profile>
   </profiles>
 </model>

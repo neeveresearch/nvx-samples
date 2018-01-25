@@ -34,7 +34,7 @@ public class ReceiveDriver {
         }
     }
 
-    @Command
+    @Command(name = "getCount", displayName = "Get Received Count", description = "Returns the count of messages received by this app.")
     public long getCount() {
         return receivedCount.getCount();
     }
