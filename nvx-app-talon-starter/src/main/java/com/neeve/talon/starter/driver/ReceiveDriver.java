@@ -21,7 +21,7 @@ public class ReceiveDriver {
     private final Counter receivedCount = StatsFactory.createCounterStat("ReceiveDriver Count");
 
     @AppStat(name = "ReceiveDriver Event Latency")
-    private volatile Latencies receiveLatencies;
+    private volatile Latencies receiveLatencies = StatsFactory.createLatencyStat("ReceiveDriver Event Latency");
 
     @EventHandler
     public final void onEvent(Event event) {

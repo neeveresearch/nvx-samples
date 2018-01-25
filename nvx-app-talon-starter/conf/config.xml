@@ -12,7 +12,7 @@
       <optimizefor>latency</optimizefor>
 
       <!-- trace -->
-      <aep.trace>info</aep.trace>
+      <aep.trace>config</aep.trace>
 
       <!-- global latency stats settings -->
       <time.useepochoffset>false</time.useepochoffset>
@@ -148,8 +148,8 @@
             <traceAppStats>false</traceAppStats>
             <tracePoolStats>false</tracePoolStats>
             <traceSysStats>false</traceSysStats>
-            <traceThreadStats>true</traceThreadStats>
-            <traceUserStats>true</traceUserStats>
+            <traceThreadStats>false</traceThreadStats>
+            <traceUserStats>false</traceUserStats>
           </tracing>
           <logging enabled="false">
             <detachedWrite enabled="false"/>
@@ -227,10 +227,6 @@
       </activation>
 
       <env>
-        <nv>
-          <enablecpuaffinitymasks>true</enablecpuaffinitymasks>
-        </nv>
-
         <ACTIVEMQ_HOST>192.168.1.8</ACTIVEMQ_HOST>
         <ACTIVEMQ_PORT>61616</ACTIVEMQ_PORT>
 
@@ -347,25 +343,26 @@
     <profile name="activemq">
       <activation>
         <properties>
-          <tick-to-trade-bus-provider>activemq</tick-to-trade-bus-provider>
+          <nvx-app-talon-starter-bus-provider>activemq</nvx-app-talon-starter-bus-provider>
         </properties>
       </activation>
+      <env>
+          <nv.discovery.descriptor>activemq://${ACTIVEMQ_HOST}:${ACTIVEMQ_PORT}&amp;discoveryChannel=nvx-app-talon-starter</nv.discovery.descriptor>
+      </env>
       <buses>
-        <bus name="ems">
+        <bus name="processor">
           <provider>activemq</provider>
           <address>${ACTIVEMQ_HOST}</address>
           <port>${ACTIVEMQ_PORT}</port>
           <properties>
-            <topic_starts_with_channel>false</topic_starts_with_channel>
+            <topicStartsWithChannel>true</topicStartsWithChannel>
           </properties>
+          
         </bus>
-        <bus name="market">
+        <bus name="events">
           <provider>activemq</provider>
           <address>${ACTIVEMQ_HOST}</address>
           <port>${ACTIVEMQ_PORT}</port>
-          <properties>
-            <topic_starts_with_channel>false</topic_starts_with_channel>
-          </properties>
         </bus>
       </buses>
     </profile>

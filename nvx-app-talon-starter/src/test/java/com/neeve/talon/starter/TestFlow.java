@@ -17,8 +17,8 @@ import com.neeve.talon.starter.driver.SendDriver;
 final public class TestFlow extends AbstractTest {
     @Test
     public void testFlow() throws Throwable {
-        int sendCount = 10000;
-        int sendRate = 10000;
+        int sendCount = 1000;
+        int sendRate = 1000;
         // configure
         Properties env = new Properties();
         env.put("nv.ddl.profiles", "test");
