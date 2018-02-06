@@ -21,7 +21,7 @@
       <link.network.stampiots>true</link.network.stampiots>
       <latencymanager.samplesize>10240</latencymanager.samplesize>
       
-      <discoveryDescriptor>mcast://224.0.1.200:4090</discoveryDescriptor>
+      <discovery.descriptor>mcast://224.0.1.200:4090</discovery.descriptor>
     </nv>
 
     <!-- Configure the test drivers -->
