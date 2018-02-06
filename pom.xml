@@ -9,7 +9,7 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <nvx.platform.version>3.9-SNAPSHOT</nvx.platform.version>
+    <nvx.platform.version>3.8-M8</nvx.platform.version>
   </properties>
 
   <modules>
