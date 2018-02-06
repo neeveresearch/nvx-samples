@@ -20,6 +20,8 @@
       <ods.latency.stats>true</ods.latency.stats>
       <link.network.stampiots>true</link.network.stampiots>
       <latencymanager.samplesize>10240</latencymanager.samplesize>
+      
+      <discoveryDescriptor>mcast://224.0.1.200:4090</discoveryDescriptor>
     </nv>
 
     <!-- Configure the test drivers -->
@@ -92,15 +94,16 @@
           <localIfAddr>${PROCESSOR_REPLICATION_INTERFACE::0.0.0.0}</localIfAddr>
         </clustering>
         <persistence enabled="true">
-          <storeRoot>${processor.tlog.root::rdat}</storeRoot>
           <initialLogLength>0</initialLogLength>
-          <compactionThreshold>0</compactionThreshold>
-          <maxCompactionWindowSize>256</maxCompactionWindowSize>
+          <compactionThreshold>1024</compactionThreshold>
+          <maxCompactionWindowSize>128</maxCompactionWindowSize>
+          <detachedPersist enabled="false"/>
         </persistence>
         <checkpointingType>Default</checkpointingType>
         <checkpointThreshold>1</checkpointThreshold>
-        <icr role="${processor.icr.role::Sender}" busDescriptor="jms://localhost:7222" enabled="${processor.icr.enabled::false}" />
+        <icr role="${processor.icr.role::Sender}" busDescriptor="activemq://localhost:61616" enabled="${processor.icr.enabled::false}" />
       </storage>
+      <inboundEventAcknowledgementPolicy>Default</inboundEventAcknowledgementPolicy>
     </app>
 
     <app name="sender" mainClass="com.neeve.talon.starter.driver.SendDriver" template="app-template">
@@ -142,22 +145,27 @@
   <xvms>
     <templates>
       <xvm name="xvm-template">
-        <heartbeats enabled="true" interval="10">
+        <heartbeats enabled="true" interval="5">
           <tracing enabled="true">
-            <traceAdminClientStats>false</traceAdminClientStats>
-            <traceAppStats>false</traceAppStats>
-            <tracePoolStats>false</tracePoolStats>
-            <traceSysStats>false</traceSysStats>
-            <traceThreadStats>false</traceThreadStats>
-            <traceUserStats>false</traceUserStats>
+              <traceAdminClientStats>false</traceAdminClientStats>
+              <traceAppStats>false</traceAppStats>
+              <tracePoolStats>false</tracePoolStats>
+              <traceSysStats>false</traceSysStats>
+              <traceThreadStats>false</traceThreadStats>
+              <traceUserStats>false</traceUserStats>
           </tracing>
-          <logging enabled="false">
-            <detachedWrite enabled="false"/>
+            <logging enabled="false">
+              <detachedWrite enabled="false"/>
           </logging>
           <collectIndividualThreadStats>true</collectIndividualThreadStats>
           <collectSeriesStats>true</collectSeriesStats>
           <includeMessageTypeStats>true</includeMessageTypeStats>
         </heartbeats>
+        <provisioning>
+          <jvm>
+            <jvmParams>-Xms512m -Xmx8g</jvmParams>
+          </jvm>
+        </provisioning>
       </xvm>
     </templates>
 
