@@ -9,7 +9,7 @@
     <parent>
       <groupId>com.neeve</groupId>
       <artifactId>nvx-samples-parent</artifactId>
-      <version>3.8-SNAPSHOT</version>
+      <version>3.9-SNAPSHOT</version>
     </parent>
 
     <dependencies>
@@ -37,46 +37,46 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>com.neeve</groupId>
-                <artifactId>nvx-platform-maven-plugin</artifactId>
-                <version>${nvx.platform.version}</version>
-                <executions>
-                    <execution>
-                        <id>State</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>adm-generate</goal>
-                        </goals>
-                        <configuration>
-                            <modelFile>${project.basedir}/src/main/models/com/neeve/talon/starter/state/state.xml</modelFile>
-                            <encodingType>Protobuf</encodingType>
-                        </configuration>
-                    </execution>
-                    
-                    <execution>
-                        <id>Messages</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>adm-generate</goal>
-                        </goals>
-                        <configuration>
-                            <modelFile>${project.basedir}/src/main/models/com/neeve/talon/starter/messages/messages.xml</modelFile>
-                            <encodingType>Protobuf</encodingType>
-                        </configuration>
-                    </execution>
-                    
-                    <execution>
-                        <id>Xar</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>robin-xar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+<build>
+  <plugins>
+    <plugin>
+      <groupId>com.neeve</groupId>
+      <artifactId>nvx-platform-maven-plugin</artifactId>
+      <version>${nvx.platform.version}</version>
+      <executions>
+        <execution>
+          <id>State</id>
+          <phase>generate-sources</phase>
+          <goals>
+            <goal>adm-generate</goal>
+          </goals>
+          <configuration>
+            <modelFile>${project.basedir}/src/main/models/com/neeve/talon/starter/state/state.xml</modelFile>
+            <encodingType>Protobuf</encodingType>
+          </configuration>
+        </execution>
+
+        <execution>
+          <id>Messages</id>
+          <phase>generate-sources</phase>
+          <goals>
+            <goal>adm-generate</goal>
+          </goals>
+          <configuration>
+            <modelFile>${project.basedir}/src/main/models/com/neeve/talon/starter/messages/messages.xml</modelFile>
+            <encodingType>Protobuf</encodingType>
+          </configuration>
+        </execution>
+
+        <execution>
+          <id>Xar</id>
+          <phase>package</phase>
+          <goals>
+            <goal>robin-xar</goal>
+          </goals>
+        </execution>
+      </executions>
+    </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
