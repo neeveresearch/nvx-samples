@@ -20,4 +20,4 @@ This sample illustrates how to copy data from an X app's state repository to an 
 This sample illustrates how to copy data from an X app's state repository to an external data source, such as an RDBMS, using CDC. See https://docs.neeveresearch.com/display/KB/Integrating+State+with+External+Sources for more information
 
 ### More reading
-As alwasy, you can find additional information in the talon manual: https://docs.neeveresearch.com/display/TALONDOC/What+is+Talon
+As usual, you can find additional information in the talon manual: https://docs.neeveresearch.com/display/TALONDOC/What+is+Talon
