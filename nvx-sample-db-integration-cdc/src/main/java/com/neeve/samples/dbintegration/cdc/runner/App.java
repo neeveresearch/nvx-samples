@@ -38,27 +38,23 @@ import com.neeve.samples.dbintegration.cdc.app.state.Inventory;
  */
 public class App {
     final private class CDCHandler implements IRogChangeDataCaptureHandler {
-        public CDCHandler() throws Exception {
-        }
+        public CDCHandler() throws Exception {}
 
         @Override
-        final public void onLogStart(int logNumber) {
-        }
+        final public void onLogStart(int logNumber) {}
 
         @Override
-        final public void onCheckpointStart(final long version) {
-        }
+        final public void onCheckpointStart(final long version) {}
 
         @Override
         final public boolean handleChange(final UUID id, final ChangeType ct, final List<IRogNode> list) {
             // increment received count
             for (IRogNode node : list) {
                 if (node instanceof Inventory) {
-                    receivedCount.increment(list.size()); 
-                    System.out.println("Received change " + node.toString()); 
+                    receivedCount.increment(list.size());
+                    System.out.println("Received change " + node.toString());
                 }
             }
-
 
             // get latest version of the object (with one or more changes conflated)
             final IRogNode node = list.get(list.size() - 1);
@@ -76,18 +72,16 @@ public class App {
         }
 
         @Override
-        final public void onWait() {
-        }
+        final public void onWait() {}
 
         @Override
-        final public void onLogComplete(int logNumber, LogCompletionReason reason, Throwable errorCause) {
-        }
+        final public void onLogComplete(int logNumber, LogCompletionReason reason, Throwable errorCause) {}
     }
 
     @AppStat
     final private Counter receivedCount = StatsFactory.createCounterStat("Receive Count");
     private RogLog _log;
-    private RogLogCdcProcessor _cdcProcessor; 
+    private RogLogCdcProcessor _cdcProcessor;
 
     final private void connectToExternalResource() {
         /*
@@ -155,7 +149,7 @@ public class App {
 
         // close the log
         if (_log != null) {
-            _log.close(); 
+            _log.close();
         }
 
         // disconnect from external source
