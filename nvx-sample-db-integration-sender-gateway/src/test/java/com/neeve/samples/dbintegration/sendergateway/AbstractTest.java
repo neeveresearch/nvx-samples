@@ -1,4 +1,4 @@
-package com.neeve.talon.starter;
+package com.neeve.samples.dbintegration.sendergateway;
 
 import java.io.File;
 import java.io.IOException;

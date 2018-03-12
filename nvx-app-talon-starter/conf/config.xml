@@ -8,7 +8,7 @@
   
   <env>
     <nv>
-      <!-- optimize for throughput -->
+      <!-- optimize for latency -->
       <optimizefor>latency</optimizefor>
 
       <!-- trace -->

@@ -93,4 +93,19 @@
             </apps>          
         </xvm>
     </xvms>
+    
+
+    <profiles>
+        <!-- Profile used for running unit tests -->
+        <profile name="test">
+            <env>
+                <nv>
+                    <conservecpu>true</conservecpu>
+                    <discovery.descriptor>loopback://discovery&amp;initWaitTime=0</discovery.descriptor>
+                </nv>
+                <driver.autoSend>true</driver.autoSend>
+                <processor.bus.descriptor>loopback://processor</processor.bus.descriptor>
+            </env>
+        </profile>
+    </profiles>
 </model>
