@@ -1,0 +1,7 @@
+assume provision has run
+##DISPLAYNAME Shutdown XVM ...
+##DESCRIPTION Shuts down an XVM
+##VAR xvmName [displayName="XVM Name", type=String, validValues="processor-1,processor-2,sender,receiver", description="The name of the XVM to shut down"] 
+
+// shutdown the xvm...
+shutdown the ${xvmName::processor-1} xvm

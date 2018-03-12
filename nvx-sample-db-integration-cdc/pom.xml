@@ -7,9 +7,22 @@
     <parent>
         <groupId>com.neeve</groupId>
         <artifactId>nvx-samples-parent</artifactId>
-        <version>3.7.5</version>
+        <version>3.8.1</version>
     </parent>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.neeve</groupId>
+            <artifactId>nvx-talon</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    
+        <dependency>
+            <groupId>com.neeve</groupId>
+            <artifactId>nvx-eagle</artifactId>
+        </dependency>
+    </dependencies>
+  
     <build>
         <plugins>
             <plugin>

@@ -2,20 +2,27 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>nvx-app-talon-starter</artifactId>
     <packaging>jar</packaging>
-    <name>Talon Start Application</name>
+    <name>Talon Starter Application</name>
     <description>This application is reference by the Talon Manual's Getting Started guide</description>
     <url>https://docs.neeveresearch.com/display/TALONDOC/Get+Started</url>
 
     <parent>
       <groupId>com.neeve</groupId>
       <artifactId>nvx-samples-parent</artifactId>
-      <version>3.7.5</version>
+      <version>3.8.1</version>
     </parent>
 
     <dependencies>
         <dependency>
             <groupId>com.neeve</groupId>
-            <artifactId>nvx-talon-all</artifactId>
+            <artifactId>nvx-talon</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+          <groupId>com.neeve</groupId>
+          <artifactId>nvx-native</artifactId>
+          <classifier>linux-x86-64</classifier>
         </dependency>
 
         <dependency>

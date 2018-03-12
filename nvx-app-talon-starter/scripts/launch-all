@@ -1,0 +1,14 @@
+##DISPLAYNAME Launch All
+##DESCRIPTION Launches all XVMs in the system
+
+assume provision has run
+
+// launch the receiver 
+launch the receiver xvm
+
+// launch the processor cluster 
+launch the processor-1 xvm
+launch the processor-2 xvm
+
+// launch the sender
+launch the sender xvm

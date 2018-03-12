@@ -1,7 +1,0 @@
-assume launch has run
-
-// shutdown the processor cluster
-stop the processor app in the processor2 xvm
-stop the processor app in the processor1 xvm
-shutdown
-
