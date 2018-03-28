@@ -10,7 +10,10 @@
     <nv>
       <!-- optimize for latency -->
       <optimizefor>latency</optimizefor>
-
+      
+      <!-- ... but disable cpu spinning by default-->
+      <conservecpu>true</conservecpu>
+      
       <!-- trace -->
       <aep.trace>config</aep.trace>
 
@@ -163,7 +166,7 @@
         </heartbeats>
         <provisioning>
           <jvm>
-            <jvmParams>-Xms512m -Xmx8g</jvmParams>
+            <jvmParams>-Xms512m -Xmx1g</jvmParams>
           </jvm>
         </provisioning>
       </xvm>
@@ -248,6 +251,7 @@
 
         <simulator.ems.orderPreallocateCount>1000000</simulator.ems.orderPreallocateCount>
 
+        <conservecpu>false</conservecpu>
       </env>
 
       <xvms>
