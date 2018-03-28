@@ -64,6 +64,21 @@
         </plugin>
       </plugins>
     </pluginManagement>
+    
+    <plugins>
+      <!-- 
+      Limit memory for tests to ensure they can be run with
+      a free license:
+       -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <argLine>-Xmx2g</argLine>
+        </configuration>
+        <version>2.20</version>
+      </plugin>
+    </plugins>
   </build>
 
   <repositories>
