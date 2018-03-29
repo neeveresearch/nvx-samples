@@ -1,11 +1,13 @@
 package com.neeve.talon.starter.driver;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.concurrent.atomic.AtomicReference;
+
 import com.neeve.talon.starter.messages.IMessage;
 import com.neeve.talon.starter.messages.Message;
 import com.neeve.trace.Tracer;
 import com.neeve.aep.AepEngine.HAPolicy;
-
-import java.util.concurrent.atomic.AtomicReference;
 
 import com.neeve.aep.AepMessageSender;
 import com.neeve.cli.annotations.Argument;
@@ -121,9 +123,11 @@ public class SendDriver {
     @AppMain
     public void run(String[] args) throws Exception {
         if (!autoSend) {
+
+            BufferedReader inputReader = new BufferedReader(new InputStreamReader(System.in));
             while (true) {
                 System.out.println("Press Enter to send " + sendCount + " messages...");
-                System.in.read();
+                inputReader.readLine();
                 sendMessages(sendCount, sendRate, false);
             }
         }
