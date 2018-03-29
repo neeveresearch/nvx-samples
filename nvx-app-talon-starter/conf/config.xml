@@ -149,7 +149,7 @@
     <templates>
       <xvm name="xvm-template">
         <heartbeats enabled="true" interval="5">
-          <tracing enabled="true">
+          <tracing enabled="false">
               <traceAdminClientStats>false</traceAdminClientStats>
               <traceAppStats>false</traceAppStats>
               <tracePoolStats>false</tracePoolStats>
@@ -157,7 +157,7 @@
               <traceThreadStats>false</traceThreadStats>
               <traceUserStats>false</traceUserStats>
           </tracing>
-            <logging enabled="false">
+          <logging enabled="false">
               <detachedWrite enabled="false"/>
           </logging>
           <collectIndividualThreadStats>true</collectIndividualThreadStats>
