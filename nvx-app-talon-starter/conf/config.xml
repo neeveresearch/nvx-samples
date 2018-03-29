@@ -104,7 +104,9 @@
         </persistence>
         <checkpointingType>Default</checkpointingType>
         <checkpointThreshold>1</checkpointThreshold>
-        <icr role="${processor.icr.role::Sender}" busDescriptor="activemq://localhost:61616" enabled="${processor.icr.enabled::false}" />
+        <icr role="${processor.icr.role::Sender}" busDescriptor="activemq://localhost:61616" enabled="${processor.icr.enabled::false}">
+          <detachedSend enabled="false"/>
+        </icr>
       </storage>
       <inboundEventAcknowledgementPolicy>Default</inboundEventAcknowledgementPolicy>
     </app>
@@ -182,6 +184,15 @@
         <app name="processor" autoStart="true" />
       </apps>
     </xvm>
+    <xvm name="processor-3-icr" template="xvm-template" enabled="${processor.icr.enabled::false}">
+      <env>
+      	<processor.clustering.enabled>false</processor.clustering.enabled>
+      	<processor.icr.role>StandaloneReceiver</processor.icr.role>
+      </env>
+      <apps>
+        <app name="processor" autoStart="true" />
+      </apps>
+    </xvm>
     <xvm name="sender" template="xvm-template">
       <apps>
         <app name="sender" autoStart="true" />
@@ -220,13 +231,19 @@
         <templates>
           <xvm name="xvm-template">
             <heartbeats enabled="true" interval="5">
-              <tracing enabled="true">
+              <tracing enabled="false">
                 <traceUserStats>true</traceUserStats>
               </tracing>
             </heartbeats>
           </xvm>
         </templates>
       </xvms>
+    </profile>
+    
+    <profile name="icr">
+       <env>
+       	<processor.icr.enabled>true</processor.icr.enabled>
+       </env>
     </profile>
     
     <!-- Profile for running on multiple hosts in real hardware -->
@@ -304,7 +321,32 @@
             <PROCESSOR_REPLICATION_INTERFACE>192.168.2.14</PROCESSOR_REPLICATION_INTERFACE>
           </env>
         </xvm>
+        
+        <xvm name="processor-3-icr" enabled="${processor.icr.enabled::false}">
+          <provisioning>
+            <host>192.168.1.12</host>
+            <jvm>
+              <javaHome>/usr/java/jdk1.8.0_60</javaHome>
+              <jvmParams>
+                -Xms8g
+                -Xmx8g
+                -XX:NewSize=1536m
+                -XX:MaxNewSize=1536m
+                -XX:SurvivorRatio=6
+                -XX:+UseParNewGC
+                -XX:ParallelGCThreads=1
+                -XX:MaxTenuringThreshold=2
+                -Xnoclassgc
+              </jvmParams>
+            </jvm>
+          </provisioning>
 
+          <env>
+            <nv.discovery.descriptor>mcast://224.0.1.200:4090&amp;localIfAddr=64.71.157.12</nv.discovery.descriptor>
+            <PROCESSOR_REPLICATION_INTERFACE>192.168.2.12</PROCESSOR_REPLICATION_INTERFACE>
+          </env>
+        </xvm>
+        
         <xvm name="receiver">
           <provisioning>
             <host>192.168.1.12</host>
