@@ -1,11 +1,15 @@
 package com.neeve.talon.starter.driver;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.concurrent.atomic.AtomicReference;
+
 import com.neeve.talon.starter.messages.IMessage;
 import com.neeve.talon.starter.messages.Message;
 import com.neeve.trace.Tracer;
+import com.neeve.aep.AepEngine;
 import com.neeve.aep.AepEngine.HAPolicy;
-
-import java.util.concurrent.atomic.AtomicReference;
 
 import com.neeve.aep.AepMessageSender;
 import com.neeve.cli.annotations.Argument;
@@ -37,10 +41,16 @@ public class SendDriver {
     @AppStat
     private final Counter sentCount = StatsFactory.createCounterStat("SendDriver Count");
 
+    private volatile AepEngine engine;
     private volatile AepMessageSender messageSender;
     private final AtomicReference<Thread> sendingThread = new AtomicReference<Thread>();
 
     private Tracer tracer = Tracer.create("sender", Tracer.Level.INFO);
+
+    @AppInjectionPoint
+    final public void setEngine(AepEngine engine) {
+        this.engine = engine;
+    }
 
     @AppInjectionPoint
     final public void setMessageSender(AepMessageSender messageSender) {
@@ -120,11 +130,25 @@ public class SendDriver {
 
     @AppMain
     public void run(String[] args) throws Exception {
+        engine.waitForMessagingToStart();
         if (!autoSend) {
+            BufferedReader inputReader = new BufferedReader(new InputStreamReader(System.in));
             while (true) {
                 System.out.println("Press Enter to send " + sendCount + " messages...");
-                System.in.read();
-                sendMessages(sendCount, sendRate, false);
+                try {
+                    String input = inputReader.readLine();
+                    if (input == null) {
+                        System.out.println("Exiting main...");
+                        break;
+                    }
+                    if (input.length() == 0) {
+                        sendMessages(sendCount, sendRate, false);
+                    }
+                }
+                catch (IOException ioe) {
+                    System.out.println("Exiting main [" + ioe.getMessage() + "]...");
+                    break;
+                }
             }
         }
         else {
