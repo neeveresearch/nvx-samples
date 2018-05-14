@@ -23,27 +23,22 @@ final public class TestFlow extends AbstractTest {
         Properties env = new Properties();
         env.put("nv.ddl.profiles", "test");
         env.put("nv.optimizefor", "throughput");
-        env.put("nv.data.root", getTestbedRoot() + "/rdat/processor-1");
         // disable clustering to speed up app startup:
         env.put("x.apps.processor.storage.clustering.enabled", "false");
-        env.put("x.apps.doc-merger-2.storage.clustering.enabled", "false");
         env.put("driver.sendCount", String.valueOf(sendCount));
         env.put("driver.sendRate", String.valueOf(sendRate));
 
         //Start the receiver
-        env.put("nv.data.root", getTestbedRoot() + "/rdat/receiver");
         ReceiveDriver receiver = startApp(ReceiveDriver.class, "receiver", "receiver", env);
 
         Thread.sleep(1000);
 
         //Start the processor
-        env.put("nv.data.root", getTestbedRoot() + "/rdat/processor-1");
         startApp(Application.class, "processor", "processor-1", env);
 
         Thread.sleep(1000);
 
         //Start the sender
-        env.put("nv.data.root", getTestbedRoot() + "/rdat/sender");
         SendDriver sender = startApp(SendDriver.class, "sender", "sender", env);
 
         long timeout = System.currentTimeMillis() + 60000;
