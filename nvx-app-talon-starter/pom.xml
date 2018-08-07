@@ -10,7 +10,7 @@
   <parent>
     <groupId>com.neeve</groupId>
     <artifactId>nvx-samples-parent</artifactId>
-    <version>3.9.0</version>
+    <version>3.9.1</version>
   </parent>
 
   <dependencies>
@@ -24,6 +24,11 @@
       <groupId>com.neeve</groupId>
       <artifactId>nvx-native</artifactId>
       <classifier>linux-x86-64</classifier>
+    </dependency>
+    
+    <dependency>
+      <groupId>com.neeve</groupId>
+      <artifactId>nvx-solace</artifactId>
     </dependency>
 
     <dependency>
