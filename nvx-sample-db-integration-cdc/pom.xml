@@ -16,11 +16,6 @@
             <artifactId>nvx-talon</artifactId>
             <scope>provided</scope>
         </dependency>
-    
-        <dependency>
-            <groupId>com.neeve</groupId>
-            <artifactId>nvx-eagle</artifactId>
-        </dependency>
     </dependencies>
   
     <build>
