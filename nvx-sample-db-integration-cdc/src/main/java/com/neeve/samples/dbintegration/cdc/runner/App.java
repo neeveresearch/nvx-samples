@@ -60,7 +60,12 @@ public class App {
             final IRogNode node = list.get(list.size() - 1);
 
             // update external resource
-            updateExternalResource(ct, node);
+            if ( ct.equals(ChangeType.Put) )
+                insertExternalResource(node);
+            if ( ct.equals(ChangeType.Put) )
+                updateExternalResource(node);
+            if ( ct.equals(ChangeType.Put) )
+                removeExternalResource(node);
 
             // done
             return true;
@@ -90,13 +95,33 @@ public class App {
          */
     }
 
-    final private void updateExternalResource(IRogChangeDataCaptureHandler.ChangeType ct, IRogNode object) {
+    final private void insertExternalResource(IRogNode object) {
+        /*
+         * This is where one would add the object into the external 
+         * resource
+         */
+        Inventory inv = (Inventory)object;
+        System.out.println("INSERT:" + inv.getSku());
+    }
+
+    final private void updateExternalResource(IRogNode object) {
         /*
          * This is where one would put code to update the external resource 
          * with data contained in the state object
          */
+        Inventory inv = (Inventory)object;
+        System.out.println("UPDATE:" + inv.getSku());
     }
 
+    final private void removeExternalResource(IRogNode object) {
+        /*
+         * This is where one would put code to remove the object from the
+         * external resource
+         */
+        Inventory inv = (Inventory)object;
+        System.out.println("REMOVE:" + inv.getSku());
+    }
+    
     final private void disconnectFromExternalResource() {
         /*
          * This is where one would put code to close connectivity to 
