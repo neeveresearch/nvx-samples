@@ -1,2 +1,2 @@
 # Overall architecture
-[imgs/CDC_Architecture.png]
+![](imgs/CDC_Architecture.png)
