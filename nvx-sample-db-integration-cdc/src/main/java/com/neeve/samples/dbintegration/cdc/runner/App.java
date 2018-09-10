@@ -8,6 +8,7 @@ import com.eaio.uuid.UUID;
 import com.neeve.cli.annotations.Command;
 import com.neeve.rog.IRogChangeDataCaptureHandler;
 import com.neeve.rog.IRogNode;
+import com.neeve.rog.IRogChangeDataCaptureHandler.ChangeType;
 import com.neeve.rog.log.RogLog;
 import com.neeve.rog.log.RogLogCdcProcessor;
 import com.neeve.server.app.annotations.AppInitializer;
@@ -60,7 +61,12 @@ public class App {
             final IRogNode node = list.get(list.size() - 1);
 
             // update external resource
-            updateExternalResource(ct, node);
+            if (ct.equals(ChangeType.Put))
+                insertExternalResource(node);
+            else if (ct.equals(ChangeType.Update))
+                updateExternalResource(node);
+            else if (ct.equals(ChangeType.Remove))
+                removeExternalResource(node);
 
             // done
             return true;
@@ -90,10 +96,24 @@ public class App {
          */
     }
 
-    final private void updateExternalResource(IRogChangeDataCaptureHandler.ChangeType ct, IRogNode object) {
+    final private void insertExternalResource(IRogNode object) {
+        /*
+         * This is where one would put code to insert the object into 
+         * the external resource
+         */
+    }
+    
+    final private void updateExternalResource(IRogNode object) {
         /*
          * This is where one would put code to update the external resource 
          * with data contained in the state object
+         */
+    }
+    
+    final private void removeExternalResource(IRogNode object) {
+        /*
+         * This is where one would put code to remove the object
+         * from the external resource
          */
     }
 
