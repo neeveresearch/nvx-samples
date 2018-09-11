@@ -18,6 +18,7 @@
             <messaging>
                 <factories>
                     <factory name="com.neeve.samples.dbintegration.cdc.app.messages.MessageFactory"/>
+		    <factory name="com.neeve.samples.dbintegration.cdc.app.state.StateFactory"/>
                 </factories>
                 <bus name="processor">
                     <channels>
@@ -96,6 +97,23 @@
     
 
     <profiles>
+        <!-- profile used for active mq -->
+	<profile name="activemq">
+	    <env>
+  	        <app.sendCount>10</app.sendCount>
+	        <nv>
+		    <conservecpu>true</conservecpu>
+		    <discovery.descriptor>activemq://localhost:61616&amp;initWaitTime=0</discovery.descriptor>
+		</nv>
+		<processor.bus.descriptor>activemq://localhost:61616&amp;initWaitTime=0</processor.bus.descriptor>
+	    </env>
+	    <buses>
+                <templates>
+		    <bus name="bus-template" descriptor="activemq://localhost:61616" />
+                </templates>
+	    </buses>
+	</profile>
+
         <!-- Profile used for running unit tests -->
         <profile name="test">
             <env>

@@ -16,6 +16,19 @@
             <artifactId>nvx-talon</artifactId>
             <scope>provided</scope>
         </dependency>
+        
+        <dependency>
+            <groupId>com.neeve</groupId>
+            <artifactId>nvx-jms</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-client</artifactId>
+            <version>5.13.0</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
   
     <build>
