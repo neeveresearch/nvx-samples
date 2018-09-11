@@ -52,7 +52,6 @@ public class App {
             for (IRogNode node : list) {
                 if (node instanceof Inventory) {
                     receivedCount.increment(list.size());
-                    System.out.println("Received change " + node.toString());
                 }
             }
 
@@ -60,13 +59,15 @@ public class App {
             final IRogNode node = list.get(list.size() - 1);
 
             // update external resource
-            if ( ct.equals(ChangeType.Put) )
-                insertExternalResource(node);
-            if ( ct.equals(ChangeType.Put) )
-                updateExternalResource(node);
-            if ( ct.equals(ChangeType.Put) )
-                removeExternalResource(node);
-
+            if ( node instanceof Inventory ) {
+                if ( ct.equals(ChangeType.Put) )
+                    insertExternalResource(node);
+                else if ( ct.equals(ChangeType.Update) )
+                    updateExternalResource(node);
+                else if ( ct.equals(ChangeType.Remove) )
+                    removeExternalResource(node);
+            }
+            
             // done
             return true;
         }
