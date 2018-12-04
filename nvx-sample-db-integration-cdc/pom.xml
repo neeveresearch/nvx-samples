@@ -7,13 +7,25 @@
     <parent>
         <groupId>com.neeve</groupId>
         <artifactId>nvx-samples-parent</artifactId>
-        <version>3.10-SNAPSHOT</version>
+        <version>3.11.0</version>
     </parent>
 
     <dependencies>
         <dependency>
             <groupId>com.neeve</groupId>
             <artifactId>nvx-talon</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.neeve</groupId>
+            <artifactId>nvx-jms</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-client</artifactId>
+            <version>5.13.0</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
