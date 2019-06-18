@@ -21,7 +21,7 @@ final public class TestFlow extends AbstractTest {
         int sendRate = 1000;
         // configure
         Properties env = new Properties();
-        env.put("nv.ddl.profiles", "test");
+        //env.put("nv.ddl.profiles", "test");
         env.put("nv.optimizefor", "throughput");
         // disable clustering to speed up app startup:
         env.put("x.apps.processor.storage.clustering.enabled", "false");
@@ -47,7 +47,7 @@ final public class TestFlow extends AbstractTest {
         }
 
         //Sleep to catch any duplicates
-        Thread.sleep(1000);
+        Thread.sleep(600000);
 
         assertEquals("Receiver did not receive all Events", sender.getCount(), receiver.getCount());
     }
