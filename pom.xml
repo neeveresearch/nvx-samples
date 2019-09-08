@@ -4,12 +4,12 @@
   <groupId>com.neeve</groupId>
   <artifactId>nvx-samples-parent</artifactId>
   <packaging>pom</packaging>
-  <version>3.9.2</version>
+  <version>3.9.3</version>
   <name>X Platform Samples Parent</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <nvx.platform.version>3.9.2</nvx.platform.version>
+    <nvx.platform.version>3.9.3</nvx.platform.version>
   </properties>
 
   <modules>
@@ -85,7 +85,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
-          <argLine>-Xmx2g</argLine>
+          <argLine>-Xmx2g -Djava.net.preferIPv4Stack=true</argLine>
         </configuration>
         <version>2.20</version>
       </plugin>
