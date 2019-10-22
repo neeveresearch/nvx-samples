@@ -20,7 +20,6 @@ This sample illustrates how to copy data from an external data source, such as a
 This sample illustrates how to copy data from an X app's state repository to an external data source, such as an RDBMS, using a gateway app. See [Integrating State with External Sources](https://docs.neeveresearch.com/display/KB/Integrating+State+with+External+Sources#IntegratingStatewithExternalSources-IntegratingApptoExternalSource) for more information.
 
 ### nvx-sample-db-integration-cdc
-This sample illustrates how to copy data from an X app's state repository to an external data source, such as an RDBMS, using CDC. See https://docs.neeveresearch.com/display/KB/Integrating+State+with+External+Sources for more information
+This sample illustrates how to copy data from an X app's state repository to an external data source, such as an RDBMS, using CDC (Change Data Capture). 
 
-### More reading
-As usual, you can find additional information in the talon manual: https://docs.neeveresearch.com/display/TALONDOC/What+is+Talon
+See [Integrating State with External Sources](https://docs.neeveresearch.com/display/KB/Integrating+State+with+External+Sources#IntegratingStatewithExternalSources-UseCDC) for more information.

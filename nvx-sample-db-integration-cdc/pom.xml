@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.neeve</groupId>
         <artifactId>nvx-samples-parent</artifactId>
-        <version>3.11.0</version>
+        <version>3.12.2</version>
     </parent>
 
     <dependencies>
@@ -16,6 +16,7 @@
             <artifactId>nvx-talon</artifactId>
             <scope>provided</scope>
         </dependency>
+
         <dependency>
             <groupId>com.neeve</groupId>
             <artifactId>nvx-jms</artifactId>
@@ -25,7 +26,7 @@
         <dependency>
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-client</artifactId>
-            <version>5.13.0</version>
+            <version>5.15.6</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
