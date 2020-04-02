@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.neeve</groupId>
         <artifactId>nvx-samples-parent</artifactId>
-        <version>3.13-SNAPSHOT</version>
+        <version>3.14-SNAPSHOT</version>
     </parent>
 
     <dependencies>
@@ -48,7 +48,7 @@
                             <encodingType>Xbuf</encodingType>
                         </configuration>
                     </execution>
-                    
+
                     <execution>
                         <id>Xar</id>
                         <phase>package</phase>
@@ -74,14 +74,14 @@
             </plugin>
 
             <plugin>
-              <artifactId>maven-compiler-plugin</artifactId>
-              <version>3.6.1</version>
-              <configuration>
-                <source>1.6</source>
-                <target>1.6</target>
-              </configuration>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.1</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
             </plugin>
-            
+
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <version>2.4</version>

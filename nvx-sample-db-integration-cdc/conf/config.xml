@@ -1,10 +1,9 @@
 <?xml version="1.0"?>
 <model xmlns="http://www.neeveresearch.com/schema/x-ddl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-
     <env>
-      <app.sendCount>-1</app.sendCount>
+        <app.sendCount>-1</app.sendCount>
     </env>
-    
+
     <buses>
         <bus name="processor" descriptor="${processor.bus.descriptor::direct://processor}">
             <channels>
@@ -18,7 +17,7 @@
             <messaging>
                 <factories>
                     <factory name="com.neeve.samples.dbintegration.cdc.app.messages.MessageFactory"/>
-		    <factory name="com.neeve.samples.dbintegration.cdc.app.state.StateFactory"/>
+                    <factory name="com.neeve.samples.dbintegration.cdc.app.state.StateFactory"/>
                 </factories>
                 <bus name="processor">
                     <channels>
@@ -62,57 +61,57 @@
 
     <xvms>
         <templates>
-          <xvm name="xvm-template">          
-            <heartbeats enabled="true" interval="10">
-                <tracing enabled="true">
-                    <traceAdminClientStats>false</traceAdminClientStats>
-                    <traceAppStats>false</traceAppStats>
-                    <tracePoolStats>false</tracePoolStats>
-                    <traceSysStats>false</traceSysStats>
-                    <traceThreadStats>false</traceThreadStats>
-                    <traceUserStats>true</traceUserStats>
-                </tracing>
-            </heartbeats>
-          </xvm>
+            <xvm name="xvm-template">
+                <heartbeats enabled="true" interval="10">
+                    <tracing enabled="true">
+                        <traceAdminClientStats>false</traceAdminClientStats>
+                        <traceAppStats>false</traceAppStats>
+                        <tracePoolStats>false</tracePoolStats>
+                        <traceSysStats>false</traceSysStats>
+                        <traceThreadStats>false</traceThreadStats>
+                        <traceUserStats>true</traceUserStats>
+                    </tracing>
+                </heartbeats>
+            </xvm>
         </templates>
-        
+
         <xvm name="processor" template="xvm-template">
             <apps>
                 <app name="processor" autoStart="true"/>
-            </apps>           
+            </apps>
         </xvm>
 
         <xvm name="runner" template="xvm-template">
             <apps>
                 <app name="runner" autoStart="true"/>
-            </apps>           
+            </apps>
         </xvm>
 
         <xvm name="driver" template="xvm-template">
             <apps>
                 <app name="driver" autoStart="true"/>
-            </apps>          
+            </apps>
         </xvm>
     </xvms>
-    
+
 
     <profiles>
         <!-- profile used for active mq -->
-	<profile name="activemq">
-	    <env>
-  	        <app.sendCount>10</app.sendCount>
-	        <nv>
-		    <conservecpu>true</conservecpu>
-		    <discovery.descriptor>activemq://localhost:61616&amp;initWaitTime=0</discovery.descriptor>
-		</nv>
-		<processor.bus.descriptor>activemq://localhost:61616&amp;initWaitTime=0</processor.bus.descriptor>
-	    </env>
-	    <buses>
+        <profile name="activemq">
+            <env>
+                <app.sendCount>10</app.sendCount>
+                <nv>
+                    <conservecpu>true</conservecpu>
+                    <discovery.descriptor>activemq://localhost:61616&amp;initWaitTime=0</discovery.descriptor>
+                </nv>
+                <processor.bus.descriptor>activemq://localhost:61616&amp;initWaitTime=0</processor.bus.descriptor>
+            </env>
+            <buses>
                 <templates>
-		    <bus name="bus-template" descriptor="activemq://localhost:61616" />
+                    <bus name="bus-template" descriptor="activemq://localhost:61616"/>
                 </templates>
-	    </buses>
-	</profile>
+            </buses>
+        </profile>
 
         <!-- Profile used for running unit tests -->
         <profile name="test">

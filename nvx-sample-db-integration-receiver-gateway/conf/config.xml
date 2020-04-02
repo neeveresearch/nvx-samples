@@ -1,8 +1,7 @@
 <?xml version="1.0"?>
 <model xmlns="http://www.neeveresearch.com/schema/x-ddl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-
     <env>
-      <app.sendCount>-1</app.sendCount>
+        <app.sendCount>-1</app.sendCount>
     </env>
 
     <buses>
@@ -60,35 +59,35 @@
 
     <xvms>
         <templates>
-          <xvm name="xvm-template">          
-            <heartbeats enabled="true" interval="10">
-                <tracing enabled="true">
-                    <traceAdminClientStats>false</traceAdminClientStats>
-                    <traceAppStats>false</traceAppStats>
-                    <tracePoolStats>false</tracePoolStats>
-                    <traceSysStats>false</traceSysStats>
-                    <traceThreadStats>false</traceThreadStats>
-                    <traceUserStats>true</traceUserStats>
-                </tracing>
-            </heartbeats>
-          </xvm>
+            <xvm name="xvm-template">
+                <heartbeats enabled="true" interval="10">
+                    <tracing enabled="true">
+                        <traceAdminClientStats>false</traceAdminClientStats>
+                        <traceAppStats>false</traceAppStats>
+                        <tracePoolStats>false</tracePoolStats>
+                        <traceSysStats>false</traceSysStats>
+                        <traceThreadStats>false</traceThreadStats>
+                        <traceUserStats>true</traceUserStats>
+                    </tracing>
+                </heartbeats>
+            </xvm>
         </templates>
         <xvm name="processor" template="xvm-template">
             <apps>
                 <app name="processor" autoStart="true"/>
-            </apps>           
+            </apps>
         </xvm>
 
         <xvm name="gateway" template="xvm-template">
             <apps>
                 <app name="gateway" autoStart="true"/>
-            </apps>           
+            </apps>
         </xvm>
 
         <xvm name="driver" template="xvm-template">
             <apps>
                 <app name="driver" autoStart="true"/>
-            </apps>           
+            </apps>
         </xvm>
     </xvms>
 

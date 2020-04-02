@@ -1,182 +1,181 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <artifactId>nvx-app-talon-starter</artifactId>
-  <packaging>jar</packaging>
-  <name>Talon Starter Application</name>
-  <description>This application is reference by the Talon Manual's Getting Started guide</description>
-  <url>https://docs.neeveresearch.com/display/TALONDOC/Get+Started</url>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>nvx-app-talon-starter</artifactId>
+    <packaging>jar</packaging>
+    <name>Talon Starter Application</name>
+    <description>This application is reference by the Talon Manual's Getting Started guide</description>
+    <url>https://docs.neeveresearch.com/display/TALONDOC/Get+Started</url>
 
-  <parent>
-    <groupId>com.neeve</groupId>
-    <artifactId>nvx-samples-parent</artifactId>
-    <version>3.13-SNAPSHOT</version>
-  </parent>
-
-  <dependencies>
-    <dependency>
-      <groupId>com.neeve</groupId>
-      <artifactId>nvx-talon</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>com.neeve</groupId>
-      <artifactId>nvx-native</artifactId>
-      <classifier>linux-x86-64</classifier>
-    </dependency>
-
-    <dependency>
-      <groupId>com.neeve</groupId>
-      <artifactId>nvx-jms</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.activemq</groupId>
-      <artifactId>activemq-client</artifactId>
-      <version>5.15.6</version>
-    </dependency>
-  </dependencies>
-
-  <build>
-    <plugins>
-      <plugin>
+    <parent>
         <groupId>com.neeve</groupId>
-        <artifactId>nvx-platform-maven-plugin</artifactId>
-        <version>${nvx.platform.version}</version>
-        <executions>
-          <execution>
-            <id>State</id>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>adm-generate</goal>
-            </goals>
-            <configuration>
-              <modelFile>${project.basedir}/src/main/models/com/neeve/talon/starter/state/state.xml</modelFile>
-              <encodingType>Protobuf</encodingType>
-            </configuration>
-          </execution>
+        <artifactId>nvx-samples-parent</artifactId>
+        <version>3.14-SNAPSHOT</version>
+    </parent>
 
-          <execution>
-            <id>Messages</id>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>adm-generate</goal>
-            </goals>
-            <configuration>
-              <modelFile>${project.basedir}/src/main/models/com/neeve/talon/starter/messages/messages.xml</modelFile>
-              <encodingType>Protobuf</encodingType>
-            </configuration>
-          </execution>
+    <dependencies>
+        <dependency>
+            <groupId>com.neeve</groupId>
+            <artifactId>nvx-talon</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
-          <execution>
-            <id>Xar</id>
-            <phase>package</phase>
-            <goals>
-              <goal>robin-xar</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
+        <dependency>
+            <groupId>com.neeve</groupId>
+            <artifactId>nvx-native</artifactId>
+            <classifier>linux-x86-64</classifier>
+        </dependency>
 
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <version>2.5</version>
-        <executions>
-          <execution>
-            <phase>package</phase>
-            <goals>
-              <goal>copy-dependencies</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
+        <dependency>
+            <groupId>com.neeve</groupId>
+            <artifactId>nvx-jms</artifactId>
+        </dependency>
 
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.6.1</version>
-        <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
-        </configuration>
-      </plugin>
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-client</artifactId>
+            <version>5.15.6</version>
+        </dependency>
+    </dependencies>
 
-      <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.4</version>
-        <executions>
-          <execution>
-            <id>dist</id>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-            <inherited>false</inherited>
-            <configuration>
-              <attach>true</attach>
-              <tarLongFileMode>gnu</tarLongFileMode>
-              <descriptors>
-                <descriptor>distribution.xml</descriptor>
-              </descriptors>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.neeve</groupId>
+                <artifactId>nvx-platform-maven-plugin</artifactId>
+                <version>${nvx.platform.version}</version>
+                <executions>
+                    <execution>
+                        <id>State</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>adm-generate</goal>
+                        </goals>
+                        <configuration>
+                            <modelFile>${project.basedir}/src/main/models/com/neeve/talon/starter/state/state.xml</modelFile>
+                            <encodingType>Protobuf</encodingType>
+                        </configuration>
+                    </execution>
 
-  <repositories>
-    <repository>
-      <id>central</id>
-      <name>Maven Central Repository</name>
-      <url>http://repo1.maven.org/maven2</url>
-      <layout>default</layout>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-    </repository>
-    <!-- Visit http://license.neeveresearch.com to get credentials -->
-    <repository>
-      <id>neeve-licensed</id>
-      <url>http://nexus.neeveresearch.com/nexus/content/repositories/neeve-licensed/</url>
-      <name>Neeve Licensed Repository</name>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-    </repository>
-  </repositories>
+                    <execution>
+                        <id>Messages</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>adm-generate</goal>
+                        </goals>
+                        <configuration>
+                            <modelFile>${project.basedir}/src/main/models/com/neeve/talon/starter/messages/messages.xml</modelFile>
+                            <encodingType>Protobuf</encodingType>
+                        </configuration>
+                    </execution>
 
-  <pluginRepositories>
-    <pluginRepository>
-      <id>central</id>
-      <name>Maven Plugin Repository</name>
-      <url>http://repo1.maven.org/maven2</url>
-      <layout>default</layout>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <releases>
-        <updatePolicy>never</updatePolicy>
-      </releases>
-    </pluginRepository>
-    <!-- Visit http://license.neeveresearch.com to get credentials -->
-    <pluginRepository>
-      <id>neeve-licensed</id>
-      <url>http://nexus.neeveresearch.com/nexus/content/repositories/neeve-licensed/</url>
-      <name>Neeve Licensed Repository</name>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-    </pluginRepository>
-  </pluginRepositories>
+                    <execution>
+                        <id>Xar</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>robin-xar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>2.5</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.1</version>
+                <configuration>
+                    <source>1.6</source>
+                    <target>1.6</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.4</version>
+                <executions>
+                    <execution>
+                        <id>dist</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <inherited>false</inherited>
+                        <configuration>
+                            <attach>true</attach>
+                            <tarLongFileMode>gnu</tarLongFileMode>
+                            <descriptors>
+                                <descriptor>distribution.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>central</id>
+            <name>Maven Central Repository</name>
+            <url>http://repo1.maven.org/maven2</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+        <!-- Visit http://license.neeveresearch.com to get credentials -->
+        <repository>
+            <id>neeve-licensed</id>
+            <url>http://nexus.neeveresearch.com/nexus/content/repositories/neeve-licensed/</url>
+            <name>Neeve Licensed Repository</name>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>central</id>
+            <name>Maven Plugin Repository</name>
+            <url>http://repo1.maven.org/maven2</url>
+            <layout>default</layout>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+        </pluginRepository>
+        <!-- Visit http://license.neeveresearch.com to get credentials -->
+        <pluginRepository>
+            <id>neeve-licensed</id>
+            <url>http://nexus.neeveresearch.com/nexus/content/repositories/neeve-licensed/</url>
+            <name>Neeve Licensed Repository</name>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </pluginRepository>
+    </pluginRepositories>
 </project>
