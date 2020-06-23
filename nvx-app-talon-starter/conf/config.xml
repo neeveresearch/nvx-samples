@@ -356,7 +356,6 @@
             </xvms>
         </profile>
 
-
         <profile name="activemq">
             <activation>
                 <properties>
