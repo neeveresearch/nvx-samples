@@ -3,12 +3,12 @@
     <groupId>com.neeve</groupId>
     <artifactId>nvx-samples-parent</artifactId>
     <packaging>pom</packaging>
-    <version>3.14-SNAPSHOT</version>
+    <version>3.15-SNAPSHOT</version>
     <name>X Platform Samples Parent</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <nvx.platform.version>3.14.7</nvx.platform.version>
+        <nvx.platform.version>3.15.4</nvx.platform.version>
     </properties>
 
     <modules>
@@ -42,7 +42,7 @@
                         <properties>
                             <property>
                                 <name>nvx.platform.version</name>
-                                <version>[3.14.0,3.14.10000]</version>
+                                <version>[3.15.0,3.15.10000]</version>
                                 <dependencies>
                                     <dependency>
                                         <groupId>com.neeve</groupId>
