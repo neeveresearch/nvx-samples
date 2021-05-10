@@ -39,19 +39,13 @@
     </env>
 
     <buses>
-        <bus name="processor">
+        <bus name="starter">
             <provider>loopback</provider>
-            <address>processor</address>
+            <address>starter</address>
             <channels>
                 <channel name="requests" id="1">
                     <qos>Guaranteed</qos>
                 </channel>
-            </channels>
-        </bus>
-        <bus name="events">
-            <provider>loopback</provider>
-            <address>receiver</address>
-            <channels>
                 <channel name="events" id="2">
                     <qos>Guaranteed</qos>
                 </channel>
@@ -77,13 +71,9 @@
                 <factories>
                     <factory name="com.neeve.talon.starter.messages.MessageFactory"/>
                 </factories>
-                <bus name="processor">
+                <bus name="starter">
                     <channels>
                         <channel name="requests" join="true"/>
-                    </channels>
-                </bus>
-                <bus name="events">
-                    <channels>
                         <channel name="events" join="false"/>
                     </channels>
                 </bus>
@@ -117,7 +107,7 @@
                 <factories>
                     <factory name="com.neeve.talon.starter.messages.MessageFactory"/>
                 </factories>
-                <bus name="processor">
+                <bus name="starter">
                     <channels>
                         <channel name="requests" join="false"/>
                     </channels>
@@ -135,7 +125,7 @@
                 <factories>
                     <factory name="com.neeve.talon.starter.messages.MessageFactory"/>
                 </factories>
-                <bus name="events">
+                <bus name="starter">
                     <channels>
                         <channel name="events" join="true"/>
                     </channels>
@@ -367,7 +357,7 @@
                 <nv.discovery.descriptor>activemq://${ACTIVEMQ_HOST}:${ACTIVEMQ_PORT}&amp;discoveryChannel=nvx-app-talon-starter</nv.discovery.descriptor>
             </env>
             <buses>
-                <bus name="processor">
+                <bus name="starter">
                     <provider>activemq</provider>
                     <address>${ACTIVEMQ_HOST}</address>
                     <port>${ACTIVEMQ_PORT}</port>
@@ -375,11 +365,6 @@
                         <topicStartsWithChannel>true</topicStartsWithChannel>
                     </properties>
 
-                </bus>
-                <bus name="events">
-                    <provider>activemq</provider>
-                    <address>${ACTIVEMQ_HOST}</address>
-                    <port>${ACTIVEMQ_PORT}</port>
                 </bus>
             </buses>
         </profile>
