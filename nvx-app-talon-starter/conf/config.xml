@@ -1,425 +1,386 @@
 <?xml version="1.0"?>
 <model xmlns="http://www.neeveresearch.com/schema/x-ddl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <systemDetails>
-    <displayName>Talon Starter App</displayName>
-    <name>nvx-app-talon-starter</name>
-    <version>DEV</version>
-  </systemDetails>
-  
-  <env>
-    <nv>
-      <!-- optimize for latency -->
-      <optimizefor>latency</optimizefor>
-      
-      <!-- ... but disable cpu spinning by default-->
-      <conservecpu>true</conservecpu>
-      
-      <!-- trace -->
-      <aep.trace>config</aep.trace>
+    <systemDetails>
+        <displayName>Talon Starter App</displayName>
+        <name>nvx-app-talon-starter</name>
+        <version>DEV</version>
+    </systemDetails>
 
-      <!-- global latency stats settings -->
-      <time.useepochoffset>false</time.useepochoffset>
-      <msg.latency.stats>true</msg.latency.stats>
-      <ods.latency.stats>true</ods.latency.stats>
-      <link.network.stampiots>true</link.network.stampiots>
-      <latencymanager.samplesize>10240</latencymanager.samplesize>
-      
-      <discovery.descriptor>mcast://224.0.1.200:4090</discovery.descriptor>
-    </nv>
-
-    <!-- Configure the test drivers -->
-    <driver.sendRate>1000</driver.sendRate>
-    <driver.sendCount>10000</driver.sendCount>
-    <driver.sendChannel>requests</driver.sendChannel>
-    <driver.autoSend>false</driver.autoSend>
-
-    <ACTIVEMQ_HOST>localhost</ACTIVEMQ_HOST>
-    <ACTIVEMQ_PORT>61616</ACTIVEMQ_PORT>
-    
-  </env>
-
-  <buses>
-    <bus name="processor">
-      <provider>direct</provider>
-      <address>processor</address>
-      <channels>
-        <channel name="requests" id="1">
-          <qos>Guaranteed</qos>
-        </channel>
-      </channels>
-    </bus>
-    <bus name="events">
-      <provider>direct</provider>
-      <address>receiver</address>
-      <channels>
-        <channel name="events" id="2">
-          <qos>Guaranteed</qos>
-        </channel>
-      </channels>
-    </bus>
-  </buses>
-
-  <apps>
-    <templates>
-      <app name="app-template">
-        <captureEventLatencyStats>true</captureEventLatencyStats>
-        <captureTransactionLatencyStats>true</captureTransactionLatencyStats>
-        <captureMessageTypeStats>true</captureMessageTypeStats>
-        <capturePerTransactionStats>false</capturePerTransactionStats>
-        <perTransactionStatsLogging policy="Off">
-          <detachedWrite enabled="true"></detachedWrite>
-        </perTransactionStatsLogging>
-      </app>
-    </templates>
-  
-    <app name="processor" mainClass="com.neeve.talon.starter.Application" template="app-template">
-      <messaging>
-        <factories>
-          <factory name="com.neeve.talon.starter.messages.MessageFactory" />
-        </factories>
-        <bus name="processor">
-          <channels>
-            <channel name="requests" join="true" />
-          </channels>
-        </bus>
-        <bus name="events">
-          <channels>
-            <channel name="events" join="false" />
-          </channels>
-        </bus>
-      </messaging>
-      <messagingStartFailPolicy>NeverFail</messagingStartFailPolicy>
-      <storage>
-        <factories>
-          <factory name="com.neeve.talon.starter.state.StateFactory" />
-        </factories>
-        <clustering enabled="${processor.clustering.enabled::true}">
-          <localIfAddr>${PROCESSOR_REPLICATION_INTERFACE::0.0.0.0}</localIfAddr>
-        </clustering>
-        <persistence enabled="true">
-          <initialLogLength>0</initialLogLength>
-          <compactionThreshold>1024</compactionThreshold>
-          <maxCompactionWindowSize>128</maxCompactionWindowSize>
-          <flushOnCommit>true</flushOnCommit>
-          <detachedPersist enabled="false"/>
-        </persistence>
-        <checkpointingType>Default</checkpointingType>
-        <checkpointThreshold>1</checkpointThreshold>
-        <icr role="${processor.icr.role::Sender}" busDescriptor="activemq://localhost:61616" enabled="${processor.icr.enabled::false}">
-          <detachedSend enabled="false"/>
-        </icr>
-      </storage>
-      <inboundEventAcknowledgementPolicy>Default</inboundEventAcknowledgementPolicy>
-    </app>
-
-    <app name="sender" mainClass="com.neeve.talon.starter.driver.SendDriver" template="app-template">
-      <messaging>
-        <factories>
-          <factory name="com.neeve.talon.starter.messages.MessageFactory" />
-        </factories>
-        <bus name="processor">
-          <channels>
-            <channel name="requests" join="false" />
-          </channels>
-        </bus>
-      </messaging>
-      <messagingStartFailPolicy>NeverFail</messagingStartFailPolicy>
-      <storage>
-        <persistence enabled="false" />
-      </storage>
-      <sequenceUnsolicitedWithSolicitedSends>true</sequenceUnsolicitedWithSolicitedSends>
-    </app>
-
-    <app name="receiver" mainClass="com.neeve.talon.starter.driver.ReceiveDriver" template="app-template">
-      <messaging>
-        <factories>
-          <factory name="com.neeve.talon.starter.messages.MessageFactory" />
-        </factories>
-        <bus name="events">
-          <channels>
-            <channel name="events" join="true" />
-          </channels>
-        </bus>
-      </messaging>
-      <messagingStartFailPolicy>NeverFail</messagingStartFailPolicy>
-      <storage>
-        <persistence enabled="false" />
-      </storage>
-    </app>
-  </apps>
-
-  <xvms>
-    <templates>
-      <xvm name="xvm-template">
-        <heartbeats enabled="true" interval="5">
-          <tracing enabled="false">
-              <traceAdminClientStats>false</traceAdminClientStats>
-              <traceAppStats>false</traceAppStats>
-              <tracePoolStats>false</tracePoolStats>
-              <traceSysStats>false</traceSysStats>
-              <traceThreadStats>false</traceThreadStats>
-              <traceUserStats>false</traceUserStats>
-          </tracing>
-          <logging enabled="false">
-              <detachedWrite enabled="false"/>
-          </logging>
-          <collectIndividualThreadStats>true</collectIndividualThreadStats>
-          <collectSeriesStats>true</collectSeriesStats>
-          <includeMessageTypeStats>true</includeMessageTypeStats>
-        </heartbeats>
-        <provisioning>
-          <jvm>
-            <jvmParams>-Xms512m -Xmx1g</jvmParams>
-          </jvm>
-        </provisioning>
-      </xvm>
-    </templates>
-
-    <xvm name="processor-1" template="xvm-template">
-      <apps>
-        <app name="processor" autoStart="true" />
-      </apps>
-    </xvm>
-    <xvm name="processor-2" template="xvm-template">
-      <apps>
-        <app name="processor" autoStart="true" />
-      </apps>
-    </xvm>
-    <xvm name="processor-3-icr" template="xvm-template" enabled="${processor.icr.enabled::false}">
-      <env>
-      	<processor.clustering.enabled>false</processor.clustering.enabled>
-      	<processor.icr.role>StandaloneReceiver</processor.icr.role>
-      </env>
-      <apps>
-        <app name="processor" autoStart="true" />
-      </apps>
-    </xvm>
-    <xvm name="sender" template="xvm-template">
-      <apps>
-        <app name="sender" autoStart="true" />
-      </apps>
-    </xvm>
-    <xvm name="receiver" template="xvm-template">
-      <apps>
-        <app name="receiver" autoStart="true" />
-      </apps>
-    </xvm>
-  </xvms>
-
-  <profiles>
-    <!-- Profile used for running unit tests -->
-    <profile name="test">
-      <env>
+    <env>
         <nv>
-          <conservecpu>true</conservecpu>
-          <discovery.descriptor>loopback://discovery&amp;initWaitTime=0</discovery.descriptor>
-        </nv>
-        <driver.autoSend>true</driver.autoSend>
-      </env>
-    </profile>
+            <!-- optimize for latency -->
+            <optimizefor>latency</optimizefor>
 
-    <!-- Profile for running on single desktop host like a laptop -->
-    <profile name="desktop">
-      <env>
-        <nv>
-          <data.directory>rdat/${nv.ddl.targetxvm::.}</data.directory>
-          <conservecpu>true</conservecpu>
+            <!-- ... but disable cpu spinning by default-->
+            <conservecpu>true</conservecpu>
+
+            <!-- trace -->
+            <aep.trace>config</aep.trace>
+
+            <!-- global latency stats settings -->
+            <time.useepochoffset>false</time.useepochoffset>
+            <msg.latency.stats>true</msg.latency.stats>
+            <ods.latency.stats>true</ods.latency.stats>
+            <link.network.stampiots>true</link.network.stampiots>
+            <latencymanager.samplesize>10240</latencymanager.samplesize>
+
+            <discovery.descriptor>mcast://224.0.1.200:4090</discovery.descriptor>
         </nv>
+
+        <!-- Configure the test drivers -->
+        <driver.sendRate>1000</driver.sendRate>
+        <driver.sendCount>10000</driver.sendCount>
+        <driver.sendChannel>requests</driver.sendChannel>
         <driver.autoSend>false</driver.autoSend>
-      </env>
 
-      <xvms>
-        <templates>
-          <xvm name="xvm-template">
-            <heartbeats enabled="true" interval="5">
-              <tracing enabled="false">
-                <traceUserStats>true</traceUserStats>
-              </tracing>
-            </heartbeats>
-          </xvm>
-        </templates>
-      </xvms>
-    </profile>
-    
-    <profile name="icr">
-       <env>
-       	<processor.icr.enabled>true</processor.icr.enabled>
-       </env>
-    </profile>
-    
-    <!-- Profile for running on multiple hosts in real hardware -->
-    <profile name="dev-env">
-      <activation>
-        <properties>
-          <lumino.agent.env>neeve-lab</lumino.agent.env>
-        </properties>
-      </activation>
-
-      <env>
-        <ACTIVEMQ_HOST>192.168.1.8</ACTIVEMQ_HOST>
+        <ACTIVEMQ_HOST>localhost</ACTIVEMQ_HOST>
         <ACTIVEMQ_PORT>61616</ACTIVEMQ_PORT>
 
-        <SOLACE_HOST>192.168.1.9</SOLACE_HOST>
-        <SOLACE_PORT>55555</SOLACE_PORT>
+    </env>
 
-        <SENDER_ACCEPTOR>tcp://192.168.1.12:11000</SENDER_ACCEPTOR>
-        <RECEIVER_ACCEPTOR>tcp://192.168.1.12:12000</RECEIVER_ACCEPTOR>
-        <PROCESSOR1_ACCEPTOR>tcp://192.168.1.13:11000</PROCESSOR1_ACCEPTOR>
-        <PROCESSOR2_ACCEPTOR>tcp://192.168.1.14:11000</PROCESSOR2_ACCEPTOR>
-
-        <simulator.ems.orderPreallocateCount>1000000</simulator.ems.orderPreallocateCount>
-
-        <conservecpu>false</conservecpu>
-      </env>
-
-      <xvms>
-        <xvm name="processor-1">
-          <provisioning>
-            <host>192.168.1.13</host>
-            <jvm>
-              <javaHome>/usr/java/jdk1.8.0_60</javaHome>
-              <jvmParams>
-                -Xms8g
-                -Xmx8g
-                -XX:NewSize=1536m
-                -XX:MaxNewSize=1536m
-                -XX:SurvivorRatio=6
-                -XX:+UseParNewGC
-                -XX:ParallelGCThreads=1
-                -XX:MaxTenuringThreshold=2
-                -Xnoclassgc
-              </jvmParams>
-            </jvm>
-          </provisioning>
-
-          <env>
-            <nv.discovery.descriptor>mcast://224.0.1.200:4090&amp;localIfAddr=64.71.157.13</nv.discovery.descriptor>
-            <PROCESSOR_REPLICATION_INTERFACE>192.168.2.13</PROCESSOR_REPLICATION_INTERFACE>
-          </env>
-        </xvm>
-
-        <xvm name="processor-2">
-          <provisioning>
-            <host>192.168.1.14</host>
-            <jvm>
-              <javaHome>/usr/java/jdk1.8.0_60</javaHome>
-              <jvmParams>
-                -Xms8g
-                -Xmx8g
-                -XX:NewSize=1536m
-                -XX:MaxNewSize=1536m
-                -XX:SurvivorRatio=6
-                -XX:+UseParNewGC
-                -XX:ParallelGCThreads=1
-                -XX:MaxTenuringThreshold=2
-                -Xnoclassgc
-              </jvmParams>
-            </jvm>
-          </provisioning>
-
-          <env>
-            <nv.discovery.descriptor>mcast://224.0.1.200:4090&amp;localIfAddr=64.71.157.14</nv.discovery.descriptor>
-            <PROCESSOR_REPLICATION_INTERFACE>192.168.2.14</PROCESSOR_REPLICATION_INTERFACE>
-          </env>
-        </xvm>
-        
-        <xvm name="processor-3-icr" enabled="${processor.icr.enabled::false}">
-          <provisioning>
-            <host>192.168.1.12</host>
-            <jvm>
-              <javaHome>/usr/java/jdk1.8.0_60</javaHome>
-              <jvmParams>
-                -Xms8g
-                -Xmx8g
-                -XX:NewSize=1536m
-                -XX:MaxNewSize=1536m
-                -XX:SurvivorRatio=6
-                -XX:+UseParNewGC
-                -XX:ParallelGCThreads=1
-                -XX:MaxTenuringThreshold=2
-                -Xnoclassgc
-              </jvmParams>
-            </jvm>
-          </provisioning>
-
-          <env>
-            <nv.discovery.descriptor>mcast://224.0.1.200:4090&amp;localIfAddr=64.71.157.12</nv.discovery.descriptor>
-            <PROCESSOR_REPLICATION_INTERFACE>192.168.2.12</PROCESSOR_REPLICATION_INTERFACE>
-          </env>
-        </xvm>
-        
-        <xvm name="receiver">
-          <provisioning>
-            <host>192.168.1.12</host>
-            <jvm>
-              <javaHome>/usr/java/jdk1.8.0_60</javaHome>
-              <jvmParams>
-                -Xms2g
-                -Xmx2g
-                -XX:NewSize=1024m
-                -XX:MaxNewSize=1024m
-                -XX:SurvivorRatio=32
-                -XX:+UseParNewGC
-                -XX:ParallelGCThreads=3
-                -Xnoclassgc
-              </jvmParams>
-            </jvm>
-          </provisioning>
-          <env>
-            <nv.discovery.descriptor>mcast://224.0.1.200:4090&amp;localIfAddr=64.71.157.12</nv.discovery.descriptor>
-          </env>
-        </xvm>
-
-        <xvm name="sender">
-          <provisioning>
-            <host>192.168.1.12</host>
-            <jvm>
-              <jvmParams>
-                -Xms2g
-                -Xmx2g
-                -XX:NewSize=1024m
-                -XX:MaxNewSize=1024m
-                -XX:SurvivorRatio=32
-                -XX:+UseParNewGC
-                -XX:ParallelGCThreads=3
-                -Xnoclassgc
-              </jvmParams>
-            </jvm>
-          </provisioning>
-
-          <env>
-            <nv.discovery.descriptor>mcast://224.0.1.200:4090&amp;localIfAddr=64.71.157.12</nv.discovery.descriptor>
-          </env>
-        </xvm>
-      </xvms>
-    </profile>
-    
-
-    <profile name="activemq">
-      <activation>
-        <properties>
-          <nvx-app-talon-starter-bus-provider>activemq</nvx-app-talon-starter-bus-provider>
-        </properties>
-      </activation>
-      <env>
-          <nv.discovery.descriptor>activemq://${ACTIVEMQ_HOST}:${ACTIVEMQ_PORT}&amp;discoveryChannel=nvx-app-talon-starter</nv.discovery.descriptor>
-      </env>
-      <buses>
+    <buses>
         <bus name="processor">
-          <provider>activemq</provider>
-          <address>${ACTIVEMQ_HOST}</address>
-          <port>${ACTIVEMQ_PORT}</port>
-          <properties>
-            <topicStartsWithChannel>true</topicStartsWithChannel>
-          </properties>
-          
+            <provider>loopback</provider>
+            <address>processor</address>
+            <channels>
+                <channel name="requests" id="1">
+                    <qos>Guaranteed</qos>
+                </channel>
+            </channels>
         </bus>
         <bus name="events">
-          <provider>activemq</provider>
-          <address>${ACTIVEMQ_HOST}</address>
-          <port>${ACTIVEMQ_PORT}</port>
+            <provider>loopback</provider>
+            <address>receiver</address>
+            <channels>
+                <channel name="events" id="2">
+                    <qos>Guaranteed</qos>
+                </channel>
+            </channels>
         </bus>
-      </buses>
-    </profile>
-  </profiles>
+    </buses>
+
+    <apps>
+        <templates>
+            <app name="app-template">
+                <captureEventLatencyStats>true</captureEventLatencyStats>
+                <captureTransactionLatencyStats>true</captureTransactionLatencyStats>
+                <captureMessageTypeStats>true</captureMessageTypeStats>
+                <capturePerTransactionStats>false</capturePerTransactionStats>
+                <perTransactionStatsLogging policy="Off">
+                    <detachedWrite enabled="true"></detachedWrite>
+                </perTransactionStatsLogging>
+            </app>
+        </templates>
+
+        <app name="processor" mainClass="com.neeve.talon.starter.Application" template="app-template">
+            <messaging>
+                <factories>
+                    <factory name="com.neeve.talon.starter.messages.MessageFactory"/>
+                </factories>
+                <bus name="processor">
+                    <channels>
+                        <channel name="requests" join="true"/>
+                    </channels>
+                </bus>
+                <bus name="events">
+                    <channels>
+                        <channel name="events" join="false"/>
+                    </channels>
+                </bus>
+            </messaging>
+            <messagingStartFailPolicy>NeverFail</messagingStartFailPolicy>
+            <storage>
+                <factories>
+                    <factory name="com.neeve.talon.starter.state.StateFactory"/>
+                </factories>
+                <clustering enabled="${processor.clustering.enabled::true}">
+                    <localIfAddr>${PROCESSOR_REPLICATION_INTERFACE::0.0.0.0}</localIfAddr>
+                </clustering>
+                <persistence enabled="true">
+                    <initialLogLength>0</initialLogLength>
+                    <compactionThreshold>1024</compactionThreshold>
+                    <maxCompactionWindowSize>128</maxCompactionWindowSize>
+                    <flushOnCommit>true</flushOnCommit>
+                    <detachedPersist enabled="false"/>
+                </persistence>
+                <checkpointingType>Default</checkpointingType>
+                <checkpointThreshold>1</checkpointThreshold>
+                <icr role="${processor.icr.role::Sender}" busDescriptor="activemq://localhost:61616" enabled="${processor.icr.enabled::false}">
+                    <detachedSend enabled="false"/>
+                </icr>
+            </storage>
+            <inboundEventAcknowledgementPolicy>Default</inboundEventAcknowledgementPolicy>
+        </app>
+
+        <app name="sender" mainClass="com.neeve.talon.starter.driver.SendDriver" template="app-template">
+            <messaging>
+                <factories>
+                    <factory name="com.neeve.talon.starter.messages.MessageFactory"/>
+                </factories>
+                <bus name="processor">
+                    <channels>
+                        <channel name="requests" join="false"/>
+                    </channels>
+                </bus>
+            </messaging>
+            <messagingStartFailPolicy>NeverFail</messagingStartFailPolicy>
+            <storage>
+                <persistence enabled="false"/>
+            </storage>
+            <sequenceUnsolicitedWithSolicitedSends>true</sequenceUnsolicitedWithSolicitedSends>
+        </app>
+
+        <app name="receiver" mainClass="com.neeve.talon.starter.driver.ReceiveDriver" template="app-template">
+            <messaging>
+                <factories>
+                    <factory name="com.neeve.talon.starter.messages.MessageFactory"/>
+                </factories>
+                <bus name="events">
+                    <channels>
+                        <channel name="events" join="true"/>
+                    </channels>
+                </bus>
+            </messaging>
+            <messagingStartFailPolicy>NeverFail</messagingStartFailPolicy>
+            <storage>
+                <persistence enabled="false"/>
+            </storage>
+        </app>
+    </apps>
+
+    <xvms>
+        <templates>
+            <xvm name="xvm-template">
+                <heartbeats enabled="true" interval="5">
+                    <tracing enabled="false">
+                        <traceAdminClientStats>false</traceAdminClientStats>
+                        <traceAppStats>false</traceAppStats>
+                        <tracePoolStats>false</tracePoolStats>
+                        <traceSysStats>false</traceSysStats>
+                        <traceThreadStats>false</traceThreadStats>
+                        <traceUserStats>false</traceUserStats>
+                    </tracing>
+                    <logging enabled="false">
+                        <detachedWrite enabled="false"/>
+                    </logging>
+                    <collectIndividualThreadStats>true</collectIndividualThreadStats>
+                    <collectSeriesStats>true</collectSeriesStats>
+                    <includeMessageTypeStats>true</includeMessageTypeStats>
+                </heartbeats>
+                <provisioning>
+                    <jvm>
+                        <jvmParams>-Xms512m -Xmx1g</jvmParams>
+                    </jvm>
+                </provisioning>
+            </xvm>
+        </templates>
+
+        <xvm name="processor-1" template="xvm-template">
+            <apps>
+                <app name="processor" autoStart="true"/>
+            </apps>
+        </xvm>
+        <xvm name="processor-2" template="xvm-template">
+            <apps>
+                <app name="processor" autoStart="true"/>
+            </apps>
+        </xvm>
+        <xvm name="processor-3-icr" template="xvm-template" enabled="${processor.icr.enabled::false}">
+            <env>
+                <processor.clustering.enabled>false</processor.clustering.enabled>
+                <processor.icr.role>StandaloneReceiver</processor.icr.role>
+            </env>
+            <apps>
+                <app name="processor" autoStart="true"/>
+            </apps>
+        </xvm>
+        <xvm name="sender" template="xvm-template">
+            <apps>
+                <app name="sender" autoStart="true"/>
+            </apps>
+        </xvm>
+        <xvm name="receiver" template="xvm-template">
+            <apps>
+                <app name="receiver" autoStart="true"/>
+            </apps>
+        </xvm>
+    </xvms>
+
+    <profiles>
+        <!-- Profile used for running unit tests -->
+        <profile name="test">
+            <env>
+                <nv>
+                    <conservecpu>true</conservecpu>
+                    <discovery.descriptor>loopback://discovery&amp;initWaitTime=0</discovery.descriptor>
+                </nv>
+                <driver.autoSend>true</driver.autoSend>
+            </env>
+        </profile>
+
+        <!-- Profile for running on single desktop host like a laptop -->
+        <profile name="desktop">
+            <env>
+                <nv>
+                    <data.directory>rdat/${nv.ddl.targetxvm::.}</data.directory>
+                    <conservecpu>true</conservecpu>
+                </nv>
+                <driver.autoSend>false</driver.autoSend>
+            </env>
+
+            <xvms>
+                <templates>
+                    <xvm name="xvm-template">
+                        <heartbeats enabled="true" interval="5">
+                            <tracing enabled="false">
+                                <traceUserStats>true</traceUserStats>
+                            </tracing>
+                        </heartbeats>
+                    </xvm>
+                </templates>
+            </xvms>
+        </profile>
+
+        <profile name="icr">
+            <env>
+                <processor.icr.enabled>true</processor.icr.enabled>
+            </env>
+        </profile>
+
+        <!-- Profile for running on multiple hosts in real hardware -->
+        <profile name="dev-env">
+            <activation>
+                <properties>
+                    <lumino.agent.env>neeve-lab</lumino.agent.env>
+                </properties>
+            </activation>
+
+            <env>
+                <ACTIVEMQ_HOST>192.168.1.8</ACTIVEMQ_HOST>
+                <ACTIVEMQ_PORT>61616</ACTIVEMQ_PORT>
+
+                <SOLACE_HOST>192.168.1.9</SOLACE_HOST>
+                <SOLACE_PORT>55555</SOLACE_PORT>
+
+                <SENDER_ACCEPTOR>tcp://192.168.1.12:11000</SENDER_ACCEPTOR>
+                <RECEIVER_ACCEPTOR>tcp://192.168.1.12:12000</RECEIVER_ACCEPTOR>
+                <PROCESSOR1_ACCEPTOR>tcp://192.168.1.13:11000</PROCESSOR1_ACCEPTOR>
+                <PROCESSOR2_ACCEPTOR>tcp://192.168.1.14:11000</PROCESSOR2_ACCEPTOR>
+
+                <simulator.ems.orderPreallocateCount>1000000</simulator.ems.orderPreallocateCount>
+
+                <conservecpu>false</conservecpu>
+            </env>
+
+            <xvms>
+                <xvm name="processor-1">
+                    <provisioning>
+                        <host>192.168.1.13</host>
+                        <jvm>
+                            <javaHome>/usr/java/jdk1.8.0_60</javaHome>
+                            <jvmParams>
+                                -Xms8g -Xmx8g -XX:NewSize=1536m -XX:MaxNewSize=1536m -XX:SurvivorRatio=6 -XX:+UseParNewGC -XX:ParallelGCThreads=1 -XX:MaxTenuringThreshold=2 -Xnoclassgc
+                            </jvmParams>
+                        </jvm>
+                    </provisioning>
+
+                    <env>
+                        <nv.discovery.descriptor>mcast://224.0.1.200:4090&amp;localIfAddr=64.71.157.13</nv.discovery.descriptor>
+                        <PROCESSOR_REPLICATION_INTERFACE>192.168.2.13</PROCESSOR_REPLICATION_INTERFACE>
+                    </env>
+                </xvm>
+
+                <xvm name="processor-2">
+                    <provisioning>
+                        <host>192.168.1.14</host>
+                        <jvm>
+                            <javaHome>/usr/java/jdk1.8.0_60</javaHome>
+                            <jvmParams>
+                                -Xms8g -Xmx8g -XX:NewSize=1536m -XX:MaxNewSize=1536m -XX:SurvivorRatio=6 -XX:+UseParNewGC -XX:ParallelGCThreads=1 -XX:MaxTenuringThreshold=2 -Xnoclassgc
+                            </jvmParams>
+                        </jvm>
+                    </provisioning>
+
+                    <env>
+                        <nv.discovery.descriptor>mcast://224.0.1.200:4090&amp;localIfAddr=64.71.157.14</nv.discovery.descriptor>
+                        <PROCESSOR_REPLICATION_INTERFACE>192.168.2.14</PROCESSOR_REPLICATION_INTERFACE>
+                    </env>
+                </xvm>
+
+                <xvm name="processor-3-icr" enabled="${processor.icr.enabled::false}">
+                    <provisioning>
+                        <host>192.168.1.12</host>
+                        <jvm>
+                            <javaHome>/usr/java/jdk1.8.0_60</javaHome>
+                            <jvmParams>
+                                -Xms8g -Xmx8g -XX:NewSize=1536m -XX:MaxNewSize=1536m -XX:SurvivorRatio=6 -XX:+UseParNewGC -XX:ParallelGCThreads=1 -XX:MaxTenuringThreshold=2 -Xnoclassgc
+                            </jvmParams>
+                        </jvm>
+                    </provisioning>
+
+                    <env>
+                        <nv.discovery.descriptor>mcast://224.0.1.200:4090&amp;localIfAddr=64.71.157.12</nv.discovery.descriptor>
+                        <PROCESSOR_REPLICATION_INTERFACE>192.168.2.12</PROCESSOR_REPLICATION_INTERFACE>
+                    </env>
+                </xvm>
+
+                <xvm name="receiver">
+                    <provisioning>
+                        <host>192.168.1.12</host>
+                        <jvm>
+                            <javaHome>/usr/java/jdk1.8.0_60</javaHome>
+                            <jvmParams>
+                                -Xms2g -Xmx2g -XX:NewSize=1024m -XX:MaxNewSize=1024m -XX:SurvivorRatio=32 -XX:+UseParNewGC -XX:ParallelGCThreads=3 -Xnoclassgc
+                            </jvmParams>
+                        </jvm>
+                    </provisioning>
+                    <env>
+                        <nv.discovery.descriptor>mcast://224.0.1.200:4090&amp;localIfAddr=64.71.157.12</nv.discovery.descriptor>
+                    </env>
+                </xvm>
+
+                <xvm name="sender">
+                    <provisioning>
+                        <host>192.168.1.12</host>
+                        <jvm>
+                            <jvmParams>
+                                -Xms2g -Xmx2g -XX:NewSize=1024m -XX:MaxNewSize=1024m -XX:SurvivorRatio=32 -XX:+UseParNewGC -XX:ParallelGCThreads=3 -Xnoclassgc
+                            </jvmParams>
+                        </jvm>
+                    </provisioning>
+
+                    <env>
+                        <nv.discovery.descriptor>mcast://224.0.1.200:4090&amp;localIfAddr=64.71.157.12</nv.discovery.descriptor>
+                    </env>
+                </xvm>
+            </xvms>
+        </profile>
+
+        <profile name="activemq">
+            <activation>
+                <properties>
+                    <nvx-app-talon-starter-bus-provider>activemq</nvx-app-talon-starter-bus-provider>
+                </properties>
+            </activation>
+            <env>
+                <nv.discovery.descriptor>activemq://${ACTIVEMQ_HOST}:${ACTIVEMQ_PORT}&amp;discoveryChannel=nvx-app-talon-starter</nv.discovery.descriptor>
+            </env>
+            <buses>
+                <bus name="processor">
+                    <provider>activemq</provider>
+                    <address>${ACTIVEMQ_HOST}</address>
+                    <port>${ACTIVEMQ_PORT}</port>
+                    <properties>
+                        <topicStartsWithChannel>true</topicStartsWithChannel>
+                    </properties>
+
+                </bus>
+                <bus name="events">
+                    <provider>activemq</provider>
+                    <address>${ACTIVEMQ_HOST}</address>
+                    <port>${ACTIVEMQ_PORT}</port>
+                </bus>
+            </buses>
+        </profile>
+    </profiles>
 </model>
