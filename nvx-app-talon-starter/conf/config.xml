@@ -40,7 +40,7 @@
 
     <buses>
         <bus name="processor">
-            <provider>direct</provider>
+            <provider>loopback</provider>
             <address>processor</address>
             <channels>
                 <channel name="requests" id="1">
@@ -49,7 +49,7 @@
             </channels>
         </bus>
         <bus name="events">
-            <provider>direct</provider>
+            <provider>loopback</provider>
             <address>receiver</address>
             <channels>
                 <channel name="events" id="2">
