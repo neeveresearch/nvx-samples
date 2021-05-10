@@ -221,6 +221,8 @@
         <!-- Profile for running on single desktop host like a laptop -->
         <profile name="desktop">
             <env>
+                <ACTIVEMQ_HOST>localhost</ACTIVEMQ_HOST>
+                <ACTIVEMQ_PORT>61616</ACTIVEMQ_PORT>
                 <nv>
                     <data.directory>rdat/${nv.ddl.targetxvm::.}</data.directory>
                     <conservecpu>true</conservecpu>
@@ -241,12 +243,6 @@
             </xvms>
         </profile>
 
-        <profile name="icr">
-            <env>
-                <processor.icr.enabled>true</processor.icr.enabled>
-            </env>
-        </profile>
-
         <!-- Profile for running on multiple hosts in real hardware -->
         <profile name="dev-env">
             <activation>
@@ -258,18 +254,15 @@
             <env>
                 <ACTIVEMQ_HOST>192.168.1.8</ACTIVEMQ_HOST>
                 <ACTIVEMQ_PORT>61616</ACTIVEMQ_PORT>
-
-                <SOLACE_HOST>192.168.1.9</SOLACE_HOST>
-                <SOLACE_PORT>55555</SOLACE_PORT>
-
                 <SENDER_ACCEPTOR>tcp://192.168.1.12:11000</SENDER_ACCEPTOR>
                 <RECEIVER_ACCEPTOR>tcp://192.168.1.12:12000</RECEIVER_ACCEPTOR>
                 <PROCESSOR1_ACCEPTOR>tcp://192.168.1.13:11000</PROCESSOR1_ACCEPTOR>
                 <PROCESSOR2_ACCEPTOR>tcp://192.168.1.14:11000</PROCESSOR2_ACCEPTOR>
 
-                <simulator.ems.orderPreallocateCount>1000000</simulator.ems.orderPreallocateCount>
-
-                <conservecpu>false</conservecpu>
+                <nv>
+                    <data.directory>rdat/${nv.ddl.targetxvm::.}</data.directory>
+                    <conservecpu>false</conservecpu>
+                </nv>
             </env>
 
             <xvms>
@@ -356,6 +349,14 @@
             </xvms>
         </profile>
 
+        <!-- Profile for enabling ICR -->
+        <profile name="icr">
+            <env>
+                <processor.icr.enabled>true</processor.icr.enabled>
+            </env>
+        </profile>
+
+        <!-- Profile for enabling use of activeMQ-->
         <profile name="activemq">
             <activation>
                 <properties>
