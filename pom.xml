@@ -3,7 +3,7 @@
     <groupId>com.neeve</groupId>
     <artifactId>nvx-samples-parent</artifactId>
     <packaging>pom</packaging>
-    <version>3.15.9</version>
+    <version>3.15.10</version>
     <name>X Platform Samples Parent</name>
 
     <properties>
