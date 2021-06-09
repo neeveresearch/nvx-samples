@@ -8,7 +8,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <nvx.platform.version>4.0.8</nvx.platform.version>
+        <nvx.platform.version>4.0-SNAPSHOT</nvx.platform.version>
     </properties>
 
     <modules>

@@ -98,10 +98,13 @@
                 </clustering>
                 <persistence enabled="true">
                     <initialLogLength>0</initialLogLength>
-                    <compactionThreshold>1024</compactionThreshold>
-                    <maxCompactionWindowSize>128</maxCompactionWindowSize>
                     <flushOnCommit>true</flushOnCommit>
                     <detachedPersist enabled="false"/>
+                    <compaction>
+                        <compactionThreshold>1024</compactionThreshold>
+                        <conflateCheckpoints>true</conflateCheckpoints>
+                        <entryRetentionThreshold>0</entryRetentionThreshold>
+                    </compaction>
                 </persistence>
                 <checkpointingType>Default</checkpointingType>
                 <checkpointThreshold>1</checkpointThreshold>
