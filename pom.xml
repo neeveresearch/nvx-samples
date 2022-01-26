@@ -42,7 +42,7 @@
                         <properties>
                             <property>
                                 <name>nvx.platform.version</name>
-                                <version>[3.15.0,3.15.10000]</version>
+                                <version>[3.16.0,3.16.10000]</version>
                                 <dependencies>
                                     <dependency>
                                         <groupId>com.neeve</groupId>
