@@ -15,24 +15,23 @@
     <dependencies>
         <dependency>
             <groupId>com.neeve</groupId>
-            <artifactId>nvx-talon</artifactId>
-            <scope>provided</scope>
+            <artifactId>nvx-rumi</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.neeve</groupId>
-            <artifactId>nvx-native</artifactId>
+            <artifactId>nvx-rumi-native</artifactId>
             <classifier>linux-x86-64</classifier>
         </dependency>
 
         <dependency>
             <groupId>com.neeve</groupId>
-            <artifactId>nvx-solace</artifactId>
+            <artifactId>nvx-rumi-solace</artifactId>
         </dependency>
 
         <dependency>
             <groupId>com.neeve</groupId>
-            <artifactId>nvx-jms</artifactId>
+            <artifactId>nvx-rumi-jms</artifactId>
         </dependency>
 
         <dependency>
