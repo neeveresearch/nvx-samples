@@ -45,7 +45,7 @@ public class SendDriver {
     private volatile AepMessageSender messageSender;
     private final AtomicReference<Thread> sendingThread = new AtomicReference<Thread>();
 
-    private Tracer tracer = Tracer.create("sender", Tracer.Level.INFO);
+    private Tracer tracer = Tracer.get("sender");
 
     @AppInjectionPoint
     final public void setEngine(AepEngine engine) {
